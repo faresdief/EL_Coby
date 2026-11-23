@@ -1,0 +1,13 @@
+{
+  "name": "el-coby-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test commerce.test.js",
+    "test:browser": "node browser-smoke.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.65.1"
+  }
+}
