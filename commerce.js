@@ -112,3 +112,31 @@ export function seasonActive(s,now,dismissedId){
   }
   return true;
 }
+
+// Smart search. Arabic spelling variants are folded together: tashkeel and tatweel removed,
+// alef forms (أ إ آ ٱ) -> ا, ى -> ي, ة -> ه, ئ -> ي, ؤ -> و, Arabic-Indic digits -> 0-9, case ignored.
+export function normalizeText(s){
+  return String(s==null?'':s).toLowerCase()
+    .replace(/[\u064B-\u0652\u0670\u0640]/g,'')
+    .replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/ئ/g,'ي').replace(/ؤ/g,'و')
+    .replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-0x0660))
+    .replace(/\s+/g,' ').trim();
+}
+const CAT_WORDS={
+  w:['ساعة','ساعات','watch','watches','wristwatch'],
+  s:['نظارة','نظارات','نضارة','نضارات','نظارة شمسية','نظارات شمسية','sunglasses','glasses','shades'],
+  c:['سلسلة','سلاسل','حظاظة','حظاظات','اسورة','أساور','اسوارة','chain','chains','bracelet','bracelets','necklace']
+};
+const haystackCache=new WeakMap();
+function haystack(p){
+  let h=haystackCache.get(p);if(h)return h;
+  const parts=[...(p.n||[]),...(p.cl||[]),...(p.m||[]),...((p.colors||[]).flatMap(c=>c.n||[])),...(CAT_WORDS[p.c]||[])];
+  h=parts.map(normalizeText).join(' | ');haystackCache.set(p,h);return h;
+}
+// Every word typed must appear somewhere in the product name, category, material or colour (either language).
+export function matchProduct(p,query){
+  const toks=normalizeText(query).split(' ').filter(Boolean);
+  if(!toks.length)return true;
+  const h=haystack(p);
+  return toks.every(t=>h.includes(t));
+}

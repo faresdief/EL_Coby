@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {P,CODES,FREE,SET_TIERS} from './data.js';
-import {gallerySlides,relatedProducts,normalizeCart,parseCartLine,countCart,addCartItem,setCartQuantity,discountAmount,hasFreeShippingCode,calculateTotals,setDiscountPct,parseLook,lookLink,parseWish,seasonActive} from './commerce.js';
+import {gallerySlides,relatedProducts,normalizeCart,parseCartLine,countCart,addCartItem,setCartQuantity,discountAmount,hasFreeShippingCode,calculateTotals,setDiscountPct,parseLook,lookLink,parseWish,seasonActive,normalizeText,matchProduct} from './commerce.js';
 const watch='w-classic~0~';
 test('malformed and non-object storage never crashes startup',()=>{
  for(const raw of ['{','null','[]','42','"hello"',null,undefined])assert.deepEqual(normalizeCart(raw,P),{});
@@ -107,4 +107,16 @@ test('seasonal banner shows only when on, in date and not closed',()=>{
  assert.equal(seasonActive(s,d,'a'),false);
  assert.equal(seasonActive({...s,until:''},new Date(2030,0,1),null),true);
  assert.equal(seasonActive({...s,until:'bad'},d,null),false);
+});
+test('search folds Arabic spelling variants and matches category words',()=>{
+ assert.equal(normalizeText('أَحمد إبراهيم آمنة'),'احمد ابراهيم امنه');
+ assert.equal(normalizeText('ساعة'),normalizeText('ساعه'));
+ const w=P.find(x=>x.c==='w'&&!x.addon),s=P.find(x=>x.c==='s'&&!x.addon),c=P.find(x=>x.c==='c'&&!x.addon);
+ for(const q of ['ساعه','ساعات','Watch','WATCHES','  watch  ']) assert.equal(matchProduct(w,q),true,q);
+ for(const q of ['نظاره','نضارة','sunglasses','نظارات شمسيه']) assert.equal(matchProduct(s,q),true,q);
+ for(const q of ['سلسله','حظاظه','chain','bracelet']) assert.equal(matchProduct(c,q),true,q);
+ assert.equal(matchProduct(w,'نظارة'),false);assert.equal(matchProduct(s,'chain'),false);
+ assert.equal(matchProduct(w,''),true);
+ assert.equal(matchProduct(w,w.n[0].slice(0,3)),true);
+ assert.equal(matchProduct(w,'zzzz'),false);
 });
