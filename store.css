@@ -363,3 +363,6 @@ html[dir=rtl] .pv-nav.prev svg{transform:rotate(-90deg)}html[dir=rtl] .pv-nav.ne
 @media(max-width:640px){.cmp-tray{bottom:10px;gap:8px}.cmp-th{display:none}.cmp-tb{font-size:.82rem}.cmp-tb th{width:20%}.cmp-tb th,.cmp-tb td{padding:8px 5px}}
 .cmp-tb .badge{position:static;font-size:.72rem}
 .cmp-tb .price{flex-wrap:wrap;gap:2px 8px}
+
+/* ===== العميل المحفوظ + اطلب تاني ===== */
+.cust-f{color:var(--acc);text-decoration:underline;font-size:inherit;margin-inline-start:6px}

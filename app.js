@@ -1,5 +1,5 @@
 import {D,GOV,CODES,OFFER_MIN,FREE,P,R,FAQ,WA,SET_TIERS} from './data.js';
-import {normalizeCart,parseCartLine,countCart,discountAmount,hasFreeShippingCode,calculateTotals,variantKey,addCartItem,setCartQuantity} from './commerce.js';
+import {normalizeCart,parseCartLine,countCart,discountAmount,hasFreeShippingCode,calculateTotals,variantKey,addCartItem,setCartQuantity,parseWish} from './commerce.js';
 const S=window.S;
 
 const $=s=>document.querySelector(s),H=document.documentElement;
@@ -9,6 +9,7 @@ $('#waContact').href='https://wa.me/'+WA;
 const byId=id=>P.find(p=>p.id===id);
 let L=S.g('lang')=='en'?1:0,cat='all',QS='',cur=null,Q=1,gi=0,DISCCODE='',discBad=false,LOCK=0,SEL={c:0,s:0};
 let CART=normalizeCart(S.g('cart'),P);S.s('cart',JSON.stringify(CART));
+let SHARED=[];
 let WISH=new Set();try{WISH=new Set(JSON.parse(S.g('wish')||'[]').filter(byId))}catch(e){}
 let USER=S.g('user')||null;
 let QUICK=null,CO_SRC='cart';
@@ -63,10 +64,10 @@ function toast(msg,label,fn){
 
 /* ---------- العرض ---------- */
 function renderTabs(){
-  $('#tabs').innerHTML=['all','w','s','c'].map(k=>`<button class="tab${k==cat?' on':''}" data-c="${k}">${T(k)}</button>`).join('')+`<button class="tab${cat=='fav'?' on':''}" data-c="fav"><svg class="i"><use href="#h"/></svg>${T('favTab')} (${WISH.size})</button>`;
+  $('#tabs').innerHTML=['all','w','s','c'].map(k=>`<button class="tab${k==cat?' on':''}" data-c="${k}">${T(k)}</button>`).join('')+`<button class="tab${cat=='fav'?' on':''}" data-c="fav"><svg class="i"><use href="#h"/></svg>${T('favTab')} (${WISH.size})</button>`+(WISH.size?`<button class="tab" data-wshare="1"><svg class="i"><use href="#copy"/></svg>${T('wishShare')}</button>`:'')+(SHARED.length?`<button class="tab${cat=='shared'?' on':''}" data-c="shared">${T('sharedTab')} (${SHARED.length})</button>`+(cat=='shared'?`<button class="tab" data-wsave="1"><svg class="i"><use href="#h"/></svg>${T('wishSaveAll')}</button>`:''):'');
 }
 function renderGrid(){
-  const list=P.filter(p=>!p.addon&&(cat=='all'||(cat=='fav'?WISH.has(p.id):p.c==cat))&&(!QS||p.n.some(x=>x.toLowerCase().includes(QS))));
+  const list=P.filter(p=>!p.addon&&(cat=='all'||(cat=='fav'?WISH.has(p.id):cat=='shared'?SHARED.includes(p.id):p.c==cat))&&(!QS||p.n.some(x=>x.toLowerCase().includes(QS))));
   $('#grid').innerHTML=list.length?list.map(p=>`<article class="card"><div class="tile"><button class="pic" data-o="${p.id}" aria-label="${p.n[L]}"><img src="${p.img}"${sset(p.img)} sizes="(max-width:640px) 50vw, (max-width:1000px) 33vw, 25vw" alt="${p.n[L]}" class="${p.fit?'ct':''}" loading="lazy" decoding="async" onerror="this.style.opacity=0"></button>${p.o?`<span class="badge">-${dc(p)}%</span>`:p.b?`<span class="badge new">${T('new')}</span>`:''}<button class="fav${WISH.has(p.id)?' on':''}" data-f="${p.id}" aria-label="${T('wishAdd')}" aria-pressed="${WISH.has(p.id)}"><svg class="i"><use href="#h"/></svg></button><button class="cmp${api.cmp.includes(p.id)?' on':''}" data-cmp="${p.id}" aria-pressed="${api.cmp.includes(p.id)}" aria-label="${T('cmpBtn')}" title="${T('cmpBtn')}"><svg class="i"><use href="#cmp"/></svg></button><button class="qv" data-qv="${p.id}" aria-label="${T('qvBtn')}" title="${T('qvBtn')}"><svg class="i"><use href="#eye"/></svg></button><button class="add" data-add="${p.id}">${T('add')}</button></div><h3><button class="nm" data-o="${p.id}">${p.n[L]}</button></h3><p class="price"><b>${fmt(p.p)}</b>${p.o?`<s>${fmt(p.o)}</s>`:''}</p></article>`).join(''):`<p class="none">${T(cat=='fav'&&!QS?'favEmpty':'noRes')}</p>`;
 }
 function render(){
@@ -141,6 +142,12 @@ function hashOpen(){
   dispatchEvent(new HashChangeEvent('hashchange')); /* رابط قديم: حوّله لصفحة المنتج */
 }
 addEventListener('hashchange',hashOpen);
+function wishOpen(){
+  const m=location.hash.match(/^#wish=([\w,-]+)$/);if(!m)return;
+  const ids=parseWish(m[1],P);if(!ids.length)return;
+  SHARED=ids;cat='shared';QS='';$('#q').value='';renderTabs();renderGrid();goToSection('shop');
+}
+addEventListener('hashchange',wishOpen);
 
 /* ---------- مشاركة ---------- */
 function copyText(txt){
@@ -167,8 +174,9 @@ function nudge(lines){
 }
 function renderCart(){
   const lines=cartLines(),{sub,disc,tot,by}=totals(lines,true);
+  const rx=api.cartExtra?api.cartExtra():'';
   const xs=P.filter(p=>p.addon&&!lines.some(l=>l.p.id===p.id));
-  $('#cdBody').innerHTML=lines.length?lines.map(l=>{const v=vtext(l);return`<div class="ci">${thumb(l.p)}<div class="ci-i"><h4>${l.p.n[L]}</h4>${v?`<p class="ci-v">${v}</p>`:''}<p class="ci-p">${fmt(l.p.p)}</p><div class="ci-q"><button data-cq="${l.k}" data-d="-1" aria-label="-">−</button><span>${l.q}</span><button data-cq="${l.k}" data-d="1" aria-label="+">+</button><button class="ci-rm" data-crm="${l.k}" aria-label="Remove"><svg class="i" style="width:17px;height:17px"><use href="#trash"/></svg></button></div></div></div>`}).join('')+(xs.length?`<div class="xs-w"><h5>${T('xsT')}</h5><div class="xs-g">${xs.map(p=>`<div class="xs"><div class="xs-i"><svg class="i"><use href="#${p.ico}"/></svg></div><b>${p.n[L]}</b><small>${p.d[L]}</small><span class="xs-p">${fmt(p.p)}</span><button class="xs-b" data-xadd="${p.id}">+ ${T('xsAdd')}</button></div>`).join('')}</div></div>`:''):`<div class="empty"><p>${T('emptyCart')}</p><button class="btn" data-goto="shop" style="margin-top:14px">${T('contShop')}</button></div>`;
+  $('#cdBody').innerHTML=lines.length?lines.map(l=>{const v=vtext(l);return`<div class="ci">${thumb(l.p)}<div class="ci-i"><h4>${l.p.n[L]}</h4>${v?`<p class="ci-v">${v}</p>`:''}<p class="ci-p">${fmt(l.p.p)}</p><div class="ci-q"><button data-cq="${l.k}" data-d="-1" aria-label="-">−</button><span>${l.q}</span><button data-cq="${l.k}" data-d="1" aria-label="+">+</button><button class="ci-rm" data-crm="${l.k}" aria-label="Remove"><svg class="i" style="width:17px;height:17px"><use href="#trash"/></svg></button></div></div></div>`}).join('')+rx+(xs.length?`<div class="xs-w"><h5>${T('xsT')}</h5><div class="xs-g">${xs.map(p=>`<div class="xs"><div class="xs-i"><svg class="i"><use href="#${p.ico}"/></svg></div><b>${p.n[L]}</b><small>${p.d[L]}</small><span class="xs-p">${fmt(p.p)}</span><button class="xs-b" data-xadd="${p.id}">+ ${T('xsAdd')}</button></div>`).join('')}</div></div>`:''):`${rx}<div class="empty"><p>${T('emptyCart')}</p><button class="btn" data-goto="shop" style="margin-top:14px">${T('contShop')}</button></div>`;
   const note=discNote(sub),shipC=codeShip(sub);
   $('#cdFoot').innerHTML=lines.length?`<div class="disc"><input id="discInput" placeholder="${T('discCode')}" value="${esc(DISCCODE||prizeCode())}"><button id="discApply">${T('apply')}</button></div><p class="err" id="discErr"${note?'':' hidden'}>${note}</p><div class="tr"><span>${T('subtotal')}</span><b>${fmt(sub)}</b></div>${disc?`<div class="tr"><span>${T('discount')} (${by=='set'?T('setDisc'):DISCCODE})</span><b>-${fmt(disc)}</b></div>`:''}${nudge(lines)}${shipC?`<div class="tr"><span>${T('shipFreeRow')} (${DISCCODE})</span><b>✓</b></div>`:''}<div class="tr tot"><span>${T('tot')}</span><span>${fmt(tot)}</span></div><button class="btn gold" id="ckBtn" style="width:100%">${T('checkout')}</button>`:'';
   const ship=$('#cdShip');ship.hidden=!lines.length;
@@ -203,6 +211,7 @@ function fillCheckout(src){
   $('#coDisc').value=DISCCODE||prizeCode();
   const note=discNote(sub);$('#coDiscErr').hidden=!note;$('#coDiscErr').textContent=note;
   $('#coErr').hidden=true;
+  api.prefill&&api.prefill();
 }
 function openCheckout(src){fillCheckout(src);openModal('#checkoutM')}
 $('#cox').onclick=()=>closeModal('#checkoutM');
@@ -215,6 +224,7 @@ $('#coSubmit').onclick=()=>{
   const used=(by=='code'||codeShip(sub))?DISCCODE:'';
   const msg=[T('wam')+' — '+T('brand'),name,phone,gov,addr,'—',...lines.map(l=>{const v=vtext(l);return`${l.p.n[L]}${v?` (${v})`:''} × ${l.q} = ${fmt(l.p.p*l.q)}`}),disc?`${T('discount')}${by=='set'?' ('+T('setDisc')+')':''}: -${fmt(disc)}`:'',used?`${T('codeLine')}: ${used}`:'',`${T('tot')}: ${fmt(tot)}`,(tot>=FREE||codeShip(sub))?T('shipFreeMsg'):''].filter(Boolean).join('\n');
   window.open('https://wa.me/'+WA+'?text='+encodeURIComponent(msg),'_blank');
+  api.onOrder&&api.onOrder(lines,name,phone);
   closeModal('#checkoutM');
   // Opening a draft is not confirmation. Keep the cart and promo intact.
 };
@@ -274,6 +284,8 @@ document.addEventListener('click',e=>{
   if(t.id=='ix'){closeModal('#infoM');return}
   if(t.classList.contains('faq-q')){t.closest('.faq-it').classList.toggle('open');return}
   if(t.dataset.c){cat=t.dataset.c;renderTabs();renderGrid();return}
+  if(t.dataset.wshare!==undefined){const u=location.href.split('#')[0]+'#wish='+[...WISH].join(',');copyText(u).then(ok=>{if(ok)toast(T('copied'));else prompt(T('copyManual'),u)});return}
+  if(t.dataset.wsave!==undefined){SHARED.forEach(id=>WISH.add(id));syncWish();return}
   if(t.dataset.f!==undefined){toggleWish(t.dataset.f);return}
   if(t.dataset.add!==undefined){addToCart(t.dataset.add);return}
   if(t.dataset.o!==undefined){openM(t.dataset.o);return}
@@ -322,6 +334,6 @@ document.addEventListener('keydown',e=>{
   else if(drawerOpen())closeDrawer();
 });
 render();
-hashOpen();
+hashOpen();wishOpen();
 
 export {SET_TIERS,api,P,byId,fmt,addToCart,openM,WA,FREE,CODES,OFFER_MIN,DISCCODE,discAmt,codeShip,lock,unlock,LOCK,goToSection};

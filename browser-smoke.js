@@ -55,5 +55,16 @@ try{
  await page.setViewportSize({width:1440,height:1000});await page.goto(url);await page.locator('.card').first().waitFor();
  await page.locator('[data-cmp]').nth(0).click();assert.equal(await page.locator('#cmpGo').isDisabled(),true);await page.locator('[data-cmp]').nth(5).click();assert.equal(await page.locator('#cmpGo').isDisabled(),false);await page.locator('[data-cmp]').nth(7).click();assert.equal(await page.locator('[data-cmp].on').count(),2);checks++;
  await page.locator('#cmpGo').click();assert.equal(await page.locator('#cmpBody .cmp-tb tbody tr').count(),7);assert.equal(await page.locator('[data-cadd]').count(),2);await page.keyboard.press('Escape');assert.equal(await page.locator('#cmpM').isHidden(),true);checks++;
+ await page.evaluate(()=>{localStorage.clear()});await page.goto(url);await page.locator('.card').first().waitFor();
+ await page.locator('[data-add]').first().click({force:true});await page.locator('#cartBtn').click();await page.locator('#ckBtn').click();
+ await page.locator('#coName').fill('Test Name');await page.locator('#coPhone').fill('01000000000');await page.locator('#coAddr').fill('Street 1');await page.locator('#coSubmit').click();
+ assert.match(await page.evaluate(()=>window.__draft||''),/wa\.me\/201282083162/);
+ await page.reload();await page.locator('.card').first().waitFor();await page.evaluate(()=>localStorage.setItem('cart','{}'));await page.reload();await page.locator('.card').first().waitFor();
+ await page.locator('#cartBtn').click();assert.equal(await page.locator('[data-reorder]').count(),1);await page.locator('[data-reorder]').click();assert.equal(await page.locator('#cnt').innerText(),'1');await page.locator('#dx').click();
+ await page.locator('[data-add]').first().click({force:true});await page.locator('#ckBtn').click({force:true});assert.equal(await page.locator('#coName').inputValue(),'Test Name');assert.equal(await page.locator('#coPhone').inputValue(),'01000000000');await page.locator('#custForget').click();assert.equal(await page.evaluate(()=>localStorage.getItem('cust')),'');await page.locator('#cox').click();checks++;
+ await page.evaluate(()=>{localStorage.clear()});await page.goto(url);await page.locator('.card').first().waitFor();
+ const ids=await page.locator('[data-f]').evaluateAll(b=>b.slice(0,2).map(x=>x.dataset.f));
+ await page.locator('[data-f]').first().click();assert.equal(await page.locator('[data-wshare]').count(),1);
+ await page.goto(url+'#wish='+ids.join(',')+',bad');await page.reload();await page.locator('.card').first().waitFor();assert.equal(await page.locator('#grid .card').count(),2);assert.equal(await page.locator('[data-wsave]').count(),1);await page.locator('[data-wsave]').click();assert.equal(await page.locator('#wcnt').innerText(),'2');checks++;
  assert.deepEqual(errors,[]);console.log(`Browser smoke passed: ${checks} checks; no JavaScript errors; WhatsApp intercepted, nothing sent.`);
 }finally{await browser.close();await new Promise(r=>server.close(r))}

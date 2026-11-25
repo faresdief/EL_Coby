@@ -89,3 +89,14 @@ export function parseLook(str,products){
   return out;
 }
 export const lookLink=(sel)=>['w','s','c'].map(k=>sel[k]).filter(Boolean).join(',');
+
+// Shared wishlist link: #wish=id,id. Only real, non-addon products, no repeats, at most 30.
+export function parseWish(raw,products){
+  const seen=[];
+  for(const id of String(raw||'').split(',')){
+    const p=products.find(x=>x.id===id);
+    if(p&&!p.addon&&!seen.includes(id))seen.push(id);
+    if(seen.length>=30)break;
+  }
+  return seen;
+}

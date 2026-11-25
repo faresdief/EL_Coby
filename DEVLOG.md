@@ -30,3 +30,11 @@ Dropped by owner decision: reviews, coupons/offers page, order confirmation/trac
 - A third pick replaces the oldest. Selection lives in memory only. Esc and the X close it.
 - `app.js` renders the icon button; `api.cmp` holds the picks. Text for the icon is `cmpBtn` in `data.js`; the rest of the text is inside `compare.js` (AR/EN).
 - Tests: unit 18, browser smoke 24.
+
+## Round 2, Release 2: remembered customer, order again, shareable wishlist (branch feature/customer-wishlist)
+- New `customer.js`. After a customer sends an order, name and phone are kept in localStorage on that device only and prefill the next checkout. A note under the phone field says so, with a "Forget my details" link that clears them. Nothing is sent anywhere.
+- "Order again": the last order (ids, quantity, colour, size) is kept on the device; the cart shows a "Your last order" block with an Order again button.
+- Shareable wishlist: a "Share wishlist" tab (next to Wishlist) copies `#wish=id,id`. Opening that link shows a "Shared wishlist" tab with just those products and a "Save to my wishlist" tab. `parseWish` in `commerce.js` accepts only real products, no repeats, max 30.
+- Hooks in `app.js`: `api.prefill`, `api.onOrder`, `api.cartExtra`.
+- Cleanup: the nine numbered junk copies (1-app.js ... 9-HANDOFF.md) that PR #10 added by mistake are removed in this release (owner approved).
+- Tests: unit 19, browser smoke 26.
