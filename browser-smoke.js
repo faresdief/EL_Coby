@@ -52,5 +52,8 @@ try{
  await page.setViewportSize({width:390,height:844});await page.reload();await page.locator('.card').first().waitFor();assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.screenshot({path:root+'/test-results/mobile.png',fullPage:true});checks++;
  await page.locator('#acct').click();await page.locator('#afn').waitFor({state:'visible'});await page.locator('#loginM .md').evaluate(el=>Promise.all(el.getAnimations().map(a=>a.finished)));await page.screenshot({path:root+'/test-results/profile.png'});await page.locator('#lx').click();
  await page.locator('#theme').click();await page.waitForFunction(()=>getComputedStyle(document.querySelector('#fade')).opacity==='0');await page.screenshot({path:root+'/test-results/dark.png'});checks++;
+ await page.setViewportSize({width:1440,height:1000});await page.goto(url);await page.locator('.card').first().waitFor();
+ await page.locator('[data-cmp]').nth(0).click();assert.equal(await page.locator('#cmpGo').isDisabled(),true);await page.locator('[data-cmp]').nth(5).click();assert.equal(await page.locator('#cmpGo').isDisabled(),false);await page.locator('[data-cmp]').nth(7).click();assert.equal(await page.locator('[data-cmp].on').count(),2);checks++;
+ await page.locator('#cmpGo').click();assert.equal(await page.locator('#cmpBody .cmp-tb tbody tr').count(),7);assert.equal(await page.locator('[data-cadd]').count(),2);await page.keyboard.press('Escape');assert.equal(await page.locator('#cmpM').isHidden(),true);checks++;
  assert.deepEqual(errors,[]);console.log(`Browser smoke passed: ${checks} checks; no JavaScript errors; WhatsApp intercepted, nothing sent.`);
 }finally{await browser.close();await new Promise(r=>server.close(r))}

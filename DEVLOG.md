@@ -24,3 +24,9 @@ Dropped by owner decision: reviews, coupons/offers page, order confirmation/trac
 - Cart shows "Set discount" line, a nudge to unlock the next tier, and the WhatsApp message carries the line.
 - Shareable link `#look=id,id,id` (`parseLook`, `lookLink`). New file `looks.js`, styles appended to `store.css`.
 - Tests: unit 18, browser smoke 22.
+
+## Round 2, Release 1: compare two products (branch feature/compare)
+- New `compare.js`. A compare icon on every product card (next to the heart); pick two, a tray appears at the bottom with a Compare button, and a table opens: price, saving, category, material, colours, sizes, lowest-price mark, add to cart, view product.
+- A third pick replaces the oldest. Selection lives in memory only. Esc and the X close it.
+- `app.js` renders the icon button; `api.cmp` holds the picks. Text for the icon is `cmpBtn` in `data.js`; the rest of the text is inside `compare.js` (AR/EN).
+- Tests: unit 18, browser smoke 24.
