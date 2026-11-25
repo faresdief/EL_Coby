@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {P,CODES,FREE} from './data.js';
-import {gallerySlides,relatedProducts,normalizeCart,parseCartLine,countCart,addCartItem,setCartQuantity,discountAmount,hasFreeShippingCode,calculateTotals} from './commerce.js';
+import {P,CODES,FREE,SET_TIERS} from './data.js';
+import {gallerySlides,relatedProducts,normalizeCart,parseCartLine,countCart,addCartItem,setCartQuantity,discountAmount,hasFreeShippingCode,calculateTotals,setDiscountPct,parseLook,lookLink} from './commerce.js';
 const watch='w-classic~0~';
 test('malformed and non-object storage never crashes startup',()=>{
  for(const raw of ['{','null','[]','42','"hello"',null,undefined])assert.deepEqual(normalizeCart(raw,P),{});
@@ -50,12 +50,12 @@ test('shipping promo is independent of cash discount',()=>{
 });
 test('cart subtotal and automatic free-shipping threshold use discounted total',()=>{
  const lines=[parseCartLine(watch,2,P),parseCartLine('x-gift~~',1,P)];
- assert.deepEqual(calculateTotals(lines,'SAVE10',CODES),{sub:1840,disc:184,tot:1656});
+ assert.deepEqual(calculateTotals(lines,'SAVE10',CODES),{sub:1840,disc:184,tot:1656,by:'code',setPct:0});
  assert.equal(calculateTotals([{p:{p:1500},q:1}],'SAVE5',CODES).tot<FREE,true);
- assert.deepEqual(calculateTotals([],'SAVE5',CODES),{sub:0,disc:0,tot:0});
+ assert.deepEqual(calculateTotals([],'SAVE5',CODES),{sub:0,disc:0,tot:0,by:'',setPct:0});
 });
 test('invalid lines cannot create negative or nonfinite totals',()=>{
- assert.deepEqual(calculateTotals([{p:{p:900},q:-2},{p:{p:-5},q:1},{p:{p:5},q:'2'}]),{sub:0,disc:0,tot:0});
+ assert.deepEqual(calculateTotals([{p:{p:900},q:-2},{p:{p:-5},q:1},{p:{p:5},q:'2'}]),{sub:0,disc:0,tot:0,by:'',setPct:0});
 });
 
 test('old watch cart keys without a size still load after sizes were added',()=>{
@@ -76,4 +76,21 @@ test('related products prefer the same category, skip itself and add-ons',()=>{
 });
 test('watches now offer sizes and chain sizes still work',()=>{
  assert.equal(P.find(p=>p.id==='w-classic').sizes.length,3);assert.equal(P.find(p=>p.id==='c-chain').sizes.length,3);
+});
+
+test('set discount: 2 categories 5%, 3 categories 10%, best-of with coupon not stacked',()=>{
+ const w=P.find(x=>x.c==='w'),s=P.find(x=>x.c==='s'),c=P.find(x=>x.c==='c'&&!x.addon);
+ const L=(...ps)=>ps.map(p=>({p,q:1}));
+ assert.equal(setDiscountPct(L(w,w),SET_TIERS),0);
+ assert.equal(setDiscountPct(L(w,s),SET_TIERS),5);
+ assert.equal(setDiscountPct(L(w,s,c),SET_TIERS),10);
+ const t=calculateTotals(L(w,s,c),'',CODES,false,SET_TIERS);
+ assert.equal(t.disc,Math.round(t.sub*0.1));assert.equal(t.by,'set');
+ const t2=calculateTotals(L(w,s),'SAVE10',CODES,false,SET_TIERS);
+ assert.equal(t2.disc,Math.round(t2.sub*0.1));assert.equal(t2.by,'code');
+});
+test('look link parses only valid, one per category',()=>{
+ const w=P.find(x=>x.c==='w'),s=P.find(x=>x.c==='s');
+ assert.deepEqual(parseLook(w.id+',bad,'+s.id+','+w.id,P),{w:w.id,s:s.id});
+ assert.equal(lookLink({w:w.id,s:s.id}),w.id+','+s.id);
 });

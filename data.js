@@ -1,5 +1,7 @@
 const D={
 brand:['الكوبي','ElCoby'],
+looksNav:['كمّل اللوك','Complete the look'],
+setDisc:['خصم الطقم','Set discount'],
 aClose:['إغلاق','Close'],aTheme:['تبديل المظهر','Toggle theme'],aCart:['سلة التسوق','Shopping cart'],aLimited:['عرض محدود','Limited offer'],noRes:['مفيش منتجات بالاسم ده. جرّب كلمة تانية.','No products match your search. Try another word.'],
 
 qvBtn:['معاينة سريعة','Quick view'],expCode:['انتهت صلاحية الكود (مدته {m} دقيقة)','This code has expired (valid for {m} minutes)'],
@@ -72,6 +74,8 @@ const cols=(...k)=>k.map(x=>COL[x]);
 const SZ_WATCH=[['38 مم','38 mm'],['40 مم','40 mm'],['42 مم','42 mm']];
 const SZ_CHAIN=[['45 سم','45 cm'],['50 سم','50 cm'],['55 سم','55 cm']];
 const SZ_BRC=[['18 سم','18 cm'],['20 سم','20 cm'],['22 سم','22 cm']];
+/* خصم الطقم التلقائي: عدد الأقسام المختلفة في السلة (ساعة / نظارة / سلسلة أو حظاظة) : النسبة. بيتطبق لو أحسن من كود الخصم، مش فوقه. */
+const SET_TIERS={2:5,3:10};
 const OFFER_MIN=15; /* مدة صلاحية كود العجلة بالدقايق — العدّاد بيعرضها والكود فعلًا بيبطل بعدها */
 const FREE=1500; /* حد الشحن المجاني بالجنيه — بيتحسب بعد الخصم */
 const P=[
@@ -98,4 +102,4 @@ const FAQ=[1,2,3,4].map(i=>['q'+i,'a'+i]);
 /* رقم واتساب المتجر (بالصيغة الدولية بدون +) — بيستقبل طلبات الشراء */
 const WA='201282083162';
 
-export {D,GOV,CODES,OFFER_MIN,FREE,P,R,FAQ,WA};
+export {SET_TIERS,D,GOV,CODES,OFFER_MIN,FREE,P,R,FAQ,WA};
