@@ -1,5 +1,6 @@
 const D={
 brand:['الكوبي','ElCoby'],
+cmpBtn:['قارن','Compare'],
 looksNav:['كمّل اللوك','Complete the look'],
 setDisc:['خصم الطقم','Set discount'],
 aClose:['إغلاق','Close'],aTheme:['تبديل المظهر','Toggle theme'],aCart:['سلة التسوق','Shopping cart'],aLimited:['عرض محدود','Limited offer'],noRes:['مفيش منتجات بالاسم ده. جرّب كلمة تانية.','No products match your search. Try another word.'],
