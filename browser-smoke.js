@@ -43,6 +43,11 @@ try{
  assert.equal(await page.locator('.pv-rel img[loading=lazy]').count(),0);await page.locator('#lang').click();assert.equal(await page.locator('#theme').getAttribute('aria-label'),'تبديل المظهر');
  await page.goto(url);await page.locator('#q').fill('watch');await page.locator('#lang').click();assert.equal(await page.locator('#grid .card').count(),3);await page.locator('#lang').click();await page.locator('#q').fill('');checks++;
  await page.locator('#lang').click();assert.equal(await page.locator('html').getAttribute('lang'),'en');assert.equal(await page.locator('.demo-banner').count(),0);checks++;
+ // complete the look: default 3-piece set = 10%, add to cart, cart shows set discount, WhatsApp draft carries it, cart stays
+ await page.goto(url);await page.locator('#looks .lk-s').waitFor();assert.equal(await page.locator('#looks .lk-c .tile').count(),3);
+ assert.match(await page.locator('#looks .lk-s').innerText(),/10%/);
+ await page.locator('#lkAdd').click();await page.locator('#cartBtn').click();assert.match(await page.locator('#cdFoot').innerText(),/Set discount|الطقم/);
+ await page.goto(url+'#look=w-sport,'+'bad');await page.locator('#looks .lk-s').waitFor();assert.doesNotMatch(await page.locator('#looks .lk-s').innerText(),/10%/);checks++;
  await mkdir(root+'/test-results',{recursive:true});await page.screenshot({path:root+'/test-results/desktop.png',fullPage:true});
  await page.setViewportSize({width:390,height:844});await page.reload();await page.locator('.card').first().waitFor();assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.screenshot({path:root+'/test-results/mobile.png',fullPage:true});checks++;
  await page.locator('#acct').click();await page.locator('#afn').waitFor({state:'visible'});await page.locator('#loginM .md').evaluate(el=>Promise.all(el.getAnimations().map(a=>a.finished)));await page.screenshot({path:root+'/test-results/profile.png'});await page.locator('#lx').click();

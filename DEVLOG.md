@@ -17,3 +17,10 @@ Rule for every release: keep the original look (colors, fonts, layout, logo). Ne
 - Tests: unit 16, browser smoke 21.
 
 Dropped by owner decision: reviews, coupons/offers page, order confirmation/tracking, admin panel.
+
+## Release 3: Complete the look (branch feature/look)
+- New section "Complete the look" on the home page (nav link too). Pick a watch, sunglasses and a chain or bracelet, see them together with live price.
+- Automatic set discount: 2 categories 5%, 3 categories 10%. Tiers live in `SET_TIERS` in `data.js`. Best of set discount or coupon, never stacked (`calculateTotals` in `commerce.js`).
+- Cart shows "Set discount" line, a nudge to unlock the next tier, and the WhatsApp message carries the line.
+- Shareable link `#look=id,id,id` (`parseLook`, `lookLink`). New file `looks.js`, styles appended to `store.css`.
+- Tests: unit 18, browser smoke 22.

@@ -1,4 +1,4 @@
-import {D,GOV,CODES,OFFER_MIN,FREE,P,R,FAQ,WA} from './data.js';
+import {D,GOV,CODES,OFFER_MIN,FREE,P,R,FAQ,WA,SET_TIERS} from './data.js';
 import {normalizeCart,parseCartLine,countCart,discountAmount,hasFreeShippingCode,calculateTotals,variantKey,addCartItem,setCartQuantity} from './commerce.js';
 const S=window.S;
 
@@ -39,7 +39,7 @@ const discNote=sub=>{ /* رسالة تحت خانة الكود: كود غلط أ
   const c=CODES[DISCCODE];return c&&sub<c.min?T('minCode').replace('{x}',fmt(c.min)):'';
 };
 function applyCode(raw){const v=raw.trim().toUpperCase();if(!v){DISCCODE='';discBad=false}else if(CODES[v]){DISCCODE=v;discBad=false}else{DISCCODE='';discBad=true}}
-const totals=(ls,useDisc)=>calculateTotals(ls,useDisc?DISCCODE:'',CODES,codeExpired(DISCCODE));
+const totals=(ls,useDisc)=>calculateTotals(ls,useDisc?DISCCODE:'',CODES,codeExpired(DISCCODE),SET_TIERS);
 const sset=u=>/images\.unsplash\.com.*[?&]w=900/.test(u||'')?` srcset="${u.replace('w=900','w=400')} 400w,${u.replace('w=900','w=600')} 600w,${u} 900w"`:'';
 const thumb=p=>p.img?`<img src="${p.img}" alt="" loading="lazy" decoding="async" onerror="this.style.opacity=0">`:`<div class="ci-ico"><svg class="i"><use href="#${p.ico}"/></svg></div>`;
 
@@ -159,12 +159,18 @@ function addToCart(id,q=1,c=null,s=null){
   else{const v=vtext({p,c,s});toast(T('toastAdded').replace('{n}',p.n[L]+(v?` (${v})`:'')),T('openCart'),openDrawer)}
 }
 function setQty(k,q){CART=setCartQuantity(CART,P,k,q);saveCart();$('#cnt').textContent=cartCount();renderCart()}
+function nudge(lines){
+  const have=new Set(lines.filter(l=>!l.p.addon).map(l=>l.p.c)),n=have.size,pct=SET_TIERS[n+1];
+  if(!n||!pct||n>=3)return '';
+  const miss=['w','s','c'].find(k=>!have.has(k)),nm={w:['ساعة','watch'],s:['نظارة','pair of sunglasses'],c:['سلسلة أو حظاظة','chain or bracelet']}[miss][L];
+  return `<p class="err" style="color:var(--acc)">${L?`Add a ${nm} to unlock ${pct}% set discount`:`ضيف ${nm} وخد خصم الطقم ${pct}%`}</p>`;
+}
 function renderCart(){
-  const lines=cartLines(),{sub,disc,tot}=totals(lines,true);
+  const lines=cartLines(),{sub,disc,tot,by}=totals(lines,true);
   const xs=P.filter(p=>p.addon&&!lines.some(l=>l.p.id===p.id));
   $('#cdBody').innerHTML=lines.length?lines.map(l=>{const v=vtext(l);return`<div class="ci">${thumb(l.p)}<div class="ci-i"><h4>${l.p.n[L]}</h4>${v?`<p class="ci-v">${v}</p>`:''}<p class="ci-p">${fmt(l.p.p)}</p><div class="ci-q"><button data-cq="${l.k}" data-d="-1" aria-label="-">−</button><span>${l.q}</span><button data-cq="${l.k}" data-d="1" aria-label="+">+</button><button class="ci-rm" data-crm="${l.k}" aria-label="Remove"><svg class="i" style="width:17px;height:17px"><use href="#trash"/></svg></button></div></div></div>`}).join('')+(xs.length?`<div class="xs-w"><h5>${T('xsT')}</h5><div class="xs-g">${xs.map(p=>`<div class="xs"><div class="xs-i"><svg class="i"><use href="#${p.ico}"/></svg></div><b>${p.n[L]}</b><small>${p.d[L]}</small><span class="xs-p">${fmt(p.p)}</span><button class="xs-b" data-xadd="${p.id}">+ ${T('xsAdd')}</button></div>`).join('')}</div></div>`:''):`<div class="empty"><p>${T('emptyCart')}</p><button class="btn" data-goto="shop" style="margin-top:14px">${T('contShop')}</button></div>`;
   const note=discNote(sub),shipC=codeShip(sub);
-  $('#cdFoot').innerHTML=lines.length?`<div class="disc"><input id="discInput" placeholder="${T('discCode')}" value="${esc(DISCCODE||prizeCode())}"><button id="discApply">${T('apply')}</button></div><p class="err" id="discErr"${note?'':' hidden'}>${note}</p><div class="tr"><span>${T('subtotal')}</span><b>${fmt(sub)}</b></div>${disc?`<div class="tr"><span>${T('discount')} (${DISCCODE})</span><b>-${fmt(disc)}</b></div>`:''}${shipC?`<div class="tr"><span>${T('shipFreeRow')} (${DISCCODE})</span><b>✓</b></div>`:''}<div class="tr tot"><span>${T('tot')}</span><span>${fmt(tot)}</span></div><button class="btn gold" id="ckBtn" style="width:100%">${T('checkout')}</button>`:'';
+  $('#cdFoot').innerHTML=lines.length?`<div class="disc"><input id="discInput" placeholder="${T('discCode')}" value="${esc(DISCCODE||prizeCode())}"><button id="discApply">${T('apply')}</button></div><p class="err" id="discErr"${note?'':' hidden'}>${note}</p><div class="tr"><span>${T('subtotal')}</span><b>${fmt(sub)}</b></div>${disc?`<div class="tr"><span>${T('discount')} (${by=='set'?T('setDisc'):DISCCODE})</span><b>-${fmt(disc)}</b></div>`:''}${nudge(lines)}${shipC?`<div class="tr"><span>${T('shipFreeRow')} (${DISCCODE})</span><b>✓</b></div>`:''}<div class="tr tot"><span>${T('tot')}</span><span>${fmt(tot)}</span></div><button class="btn gold" id="ckBtn" style="width:100%">${T('checkout')}</button>`:'';
   const ship=$('#cdShip');ship.hidden=!lines.length;
   if(lines.length){
     const left=Math.max(0,FREE-tot),free=left<=0||shipC,ratio=free?1:tot/FREE;
@@ -192,8 +198,8 @@ $('#loginM').addEventListener('click',e=>{if(e.target.id=='loginM')closeModal('#
 /* ---------- الشيك آوت ---------- */
 function fillCheckout(src){
   CO_SRC=src;
-  const lines=linesFor(src),{sub,disc,tot}=totals(lines,true);
-  $('#ordSummary').innerHTML=`<div class="ord">${lines.map(l=>{const v=vtext(l);return`<div><span>${l.p.n[L]}${v?` (${v})`:''} × ${l.q}</span><span>${fmt(l.p.p*l.q)}</span></div>`}).join('')}${disc?`<div><span>${T('discount')} (${DISCCODE})</span><span>-${fmt(disc)}</span></div>`:''}${codeShip(sub)?`<div><span>${T('shipFreeRow')} (${DISCCODE})</span><span>✓</span></div>`:''}<div style="font-weight:700;border-top:1px solid var(--line);margin-top:6px;padding-top:6px"><span>${T('tot')}</span><span>${fmt(tot)}</span></div></div>`;
+  const lines=linesFor(src),{sub,disc,tot,by}=totals(lines,true);
+  $('#ordSummary').innerHTML=`<div class="ord">${lines.map(l=>{const v=vtext(l);return`<div><span>${l.p.n[L]}${v?` (${v})`:''} × ${l.q}</span><span>${fmt(l.p.p*l.q)}</span></div>`}).join('')}${disc?`<div><span>${T('discount')} (${by=='set'?T('setDisc'):DISCCODE})</span><span>-${fmt(disc)}</span></div>`:''}${codeShip(sub)?`<div><span>${T('shipFreeRow')} (${DISCCODE})</span><span>✓</span></div>`:''}<div style="font-weight:700;border-top:1px solid var(--line);margin-top:6px;padding-top:6px"><span>${T('tot')}</span><span>${fmt(tot)}</span></div></div>`;
   $('#coDisc').value=DISCCODE||prizeCode();
   const note=discNote(sub);$('#coDiscErr').hidden=!note;$('#coDiscErr').textContent=note;
   $('#coErr').hidden=true;
@@ -205,9 +211,9 @@ $('#infoM').addEventListener('click',e=>{if(e.target.id=='infoM')closeModal('#in
 $('#coSubmit').onclick=()=>{
   const name=$('#coName').value.trim(),phone=$('#coPhone').value.trim(),gov=$('#gov').value,addr=$('#coAddr').value.trim();
   if(!name||!phone||!addr){$('#coErr').hidden=false;$('#coErr').textContent=T('reqErr');return}
-  const lines=linesFor(CO_SRC),{sub,disc,tot}=totals(lines,true);
-  const used=(disc>0||codeShip(sub))?DISCCODE:'';
-  const msg=[T('wam')+' — '+T('brand'),name,phone,gov,addr,'—',...lines.map(l=>{const v=vtext(l);return`${l.p.n[L]}${v?` (${v})`:''} × ${l.q} = ${fmt(l.p.p*l.q)}`}),disc?`${T('discount')}: -${fmt(disc)}`:'',used?`${T('codeLine')}: ${used}`:'',`${T('tot')}: ${fmt(tot)}`,(tot>=FREE||codeShip(sub))?T('shipFreeMsg'):''].filter(Boolean).join('\n');
+  const lines=linesFor(CO_SRC),{sub,disc,tot,by}=totals(lines,true);
+  const used=(by=='code'||codeShip(sub))?DISCCODE:'';
+  const msg=[T('wam')+' — '+T('brand'),name,phone,gov,addr,'—',...lines.map(l=>{const v=vtext(l);return`${l.p.n[L]}${v?` (${v})`:''} × ${l.q} = ${fmt(l.p.p*l.q)}`}),disc?`${T('discount')}${by=='set'?' ('+T('setDisc')+')':''}: -${fmt(disc)}`:'',used?`${T('codeLine')}: ${used}`:'',`${T('tot')}: ${fmt(tot)}`,(tot>=FREE||codeShip(sub))?T('shipFreeMsg'):''].filter(Boolean).join('\n');
   window.open('https://wa.me/'+WA+'?text='+encodeURIComponent(msg),'_blank');
   closeModal('#checkoutM');
   // Opening a draft is not confirmation. Keep the cart and promo intact.
@@ -318,4 +324,4 @@ document.addEventListener('keydown',e=>{
 render();
 hashOpen();
 
-export {api,P,byId,fmt,addToCart,openM,WA,FREE,CODES,OFFER_MIN,DISCCODE,discAmt,codeShip,lock,unlock,LOCK,goToSection};
+export {SET_TIERS,api,P,byId,fmt,addToCart,openM,WA,FREE,CODES,OFFER_MIN,DISCCODE,discAmt,codeShip,lock,unlock,LOCK,goToSection};

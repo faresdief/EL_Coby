@@ -49,10 +49,19 @@ export function hasFreeShippingCode(sub,code,codes,expired=false){
   const rule=Object.hasOwn(codes,code)?codes[code]:null;
   return !!rule&&rule.t==='ship'&&!expired&&sub>=rule.min;
 }
-export function calculateTotals(lines,code='',codes={},expired=false){
+/* نسبة خصم الطقم: حسب عدد الأقسام المختلفة (w/s/c) في الأسطر */
+export function setDiscountPct(lines,tiers={}){
+  const cats=new Set(lines.filter(l=>validQuantity(l.q)&&l.p&&!l.p.addon&&l.p.c).map(l=>l.p.c));
+  return Number(tiers[cats.size])||0;
+}
+export function calculateTotals(lines,code='',codes={},expired=false,tiers={}){
   const sub=lines.reduce((sum,line)=>validQuantity(line.q)&&Number.isFinite(line.p?.p)&&line.p.p>=0?sum+line.p.p*line.q:sum,0);
-  const disc=discountAmount(sub,code,codes,expired);
-  return {sub,disc,tot:sub-disc};
+  const coupon=discountAmount(sub,code,codes,expired);
+  const pct=setDiscountPct(lines,tiers),set=Math.round(sub*pct/100);
+  /* الأفضل للعميل بس، مش الاتنين مع بعض */
+  const by=set>coupon?'set':coupon>0?'code':'';
+  const disc=Math.max(set,coupon);
+  return {sub,disc,tot:sub-disc,by,setPct:pct};
 }
 /* صور المنتج: الصورة الأساسية (أو صورة اللون) + more لو فيه صور حقيقية. وإلا لقطات مقرّبة من نفس الصورة. */
 export const ZOOM_VIEWS=['','transform:scale(1.9)','transform:scale(1.9);transform-origin:15% 85%'];
@@ -69,3 +78,14 @@ export function relatedProducts(products,id,n=4){
   const rest=products.filter(p=>!p.addon&&p.id!==id);
   return [...rest.filter(p=>p.c===me.c),...rest.filter(p=>p.c!==me.c)].slice(0,n);
 }
+
+/* الطقم: id لكل قسم بالترتيب ساعة/نظارة/سلسلة. بيتحمّل من الرابط #look=a,b,c وبيتجاهل أي id غلط أو مكرر القسم */
+export function parseLook(str,products){
+  const out={};
+  for(const id of String(str||'').split(',')){
+    const p=products.find(x=>x.id===id);
+    if(p&&!p.addon&&!out[p.c])out[p.c]=p.id;
+  }
+  return out;
+}
+export const lookLink=(sel)=>['w','s','c'].map(k=>sel[k]).filter(Boolean).join(',');
