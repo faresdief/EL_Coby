@@ -61,7 +61,7 @@ ${p.o?`<p class="sv">${t('save')} ${fmt(p.o-p.p)}</p>`:''}
 function related(p){
   const l=L(),list=relatedProducts(P,p.id,4);
   if(!list.length)return '';
-  return `<section class="pv-rel"><div class="sec-h"><h2>${t('rel')}</h2></div><div class="grid">${list.map(r=>`<article class="card"><div class="tile"><button class="pic" data-o="${r.id}" aria-label="${esc(r.n[l])}"><img src="${r.img}" alt="${esc(r.n[l])}" class="${r.fit?'ct':''}" loading="lazy" decoding="async" onerror="this.style.opacity=0"></button>${r.o?`<span class="badge">-${Math.round(100-r.p*100/r.o)}%</span>`:r.b?`<span class="badge new">${isEn()?'New':'جديد'}</span>`:''}</div><h3><button class="nm" data-o="${r.id}">${esc(r.n[l])}</button></h3><p class="price"><b>${fmt(r.p)}</b>${r.o?`<s>${fmt(r.o)}</s>`:''}</p></article>`).join('')}</div></section>`;
+  return `<section class="pv-rel"><div class="sec-h"><h2>${t('rel')}</h2></div><div class="grid">${list.map(r=>`<article class="card"><div class="tile"><button class="pic" data-o="${r.id}" aria-label="${esc(r.n[l])}"><img src="${r.img}" alt="${esc(r.n[l])}" class="${r.fit?'ct':''}" decoding="async" onerror="this.style.opacity=0"></button>${r.o?`<span class="badge">-${Math.round(100-r.p*100/r.o)}%</span>`:r.b?`<span class="badge new">${isEn()?'New':'جديد'}</span>`:''}</div><h3><button class="nm" data-o="${r.id}">${esc(r.n[l])}</button></h3><p class="price"><b>${fmt(r.p)}</b>${r.o?`<s>${fmt(r.o)}</s>`:''}</p></article>`).join('')}</div></section>`;
 }
 function ld(p){
   let s=q('#pv-ld');if(!s){s=document.createElement('script');s.type='application/ld+json';s.id='pv-ld';document.head.append(s)}

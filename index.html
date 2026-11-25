@@ -32,12 +32,12 @@
 </head>
 <body>
 <!-- /* MICRO-INTERACTIONS */ HTML — Countdown bar (sticky top) -->
-<div class="mi-bar" id="mi-bar" role="region" aria-label="عرض محدود" aria-hidden="true">
+<div class="mi-bar" id="mi-bar" role="region" data-al="aLimited" aria-label="عرض محدود" aria-hidden="true">
   <div class="mi-bar-w"><div class="mi-bar-in">
     <span class="mi-bar-msg" id="mi-msg"></span>
     <span class="mi-clock" id="mi-clock" aria-live="off">15:00</span>
     <button class="mi-bar-copy" id="mi-copy" type="button"></button>
-    <button class="mi-bar-x" id="mi-x" type="button" aria-label="إغلاق"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></button>
+    <button class="mi-bar-x" id="mi-x" type="button" data-al="aClose" aria-label="إغلاق"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></button>
   </div></div>
 </div>
 <svg width="0" height="0" style="position:absolute"><defs>
@@ -63,12 +63,12 @@
 <header class="hd"><div class="wrap hd-in">
   <a class="logo" href="#"><span data-i="brand"></span><b>.</b></a>
   <nav><a href="#" data-i="home"></a><a href="#shop" data-i="shop"></a><a href="#faq" data-i="faqNav"></a><a href="#" data-i="about" data-info="about"></a><a href="#" id="waContact" target="_blank" rel="noopener" data-i="contact"></a></nav>
-  <label class="search"><svg class="i"><use href="#s"/></svg><input id="q" type="search"></label>
+  <label class="search"><svg class="i"><use href="#s"/></svg><input id="q" type="search" enterkeyhint="search" autocomplete="off"></label>
   <button class="lang" id="lang"></button>
-  <button class="ic" id="theme" aria-label="Theme"><svg class="i to-d"><use href="#moon"/></svg><svg class="i to-l"><use href="#sun"/></svg></button>
-  <button class="ic" id="wishBtn" aria-label="Wishlist"><svg class="i"><use href="#h"/></svg><span class="cnt" id="wcnt" hidden>0</span></button>
-  <button class="ic" id="acct" aria-label="Account"><svg class="i"><use href="#u"/></svg></button>
-  <button class="ic" id="cartBtn" aria-label="Cart"><svg class="i"><use href="#b"/></svg><span class="cnt" id="cnt">0</span></button>
+  <button class="ic" id="theme" data-al="aTheme" aria-label="Theme"><svg class="i to-d"><use href="#moon"/></svg><svg class="i to-l"><use href="#sun"/></svg></button>
+  <button class="ic" id="wishBtn" data-al="favTab" aria-label="Wishlist"><svg class="i"><use href="#h"/></svg><span class="cnt" id="wcnt" hidden>0</span></button>
+  <button class="ic" id="acct" data-al="login" aria-label="Account"><svg class="i"><use href="#u"/></svg></button>
+  <button class="ic" id="cartBtn" data-al="aCart" aria-label="Cart"><svg class="i"><use href="#b"/></svg><span class="cnt" id="cnt">0</span></button>
 </div></header>
 
 <section class="wrap pv" id="pv" hidden></section>
@@ -113,20 +113,20 @@
 
 <!-- نافذة تفاصيل المنتج -->
 <div class="mo" id="mo" hidden><div class="md" role="dialog" aria-modal="true" aria-labelledby="mt">
-  <button class="ic x" id="mx" aria-label="Close"><svg class="i"><use href="#x"/></svg></button>
+  <button class="ic x" id="mx" data-al="aClose" aria-label="Close"><svg class="i"><use href="#x"/></svg></button>
   <div><div class="mm" id="mm"></div><div class="th" id="th"></div></div>
   <div class="mi" id="mi"></div>
 </div></div>
 
 <!-- نافذة تسجيل الدخول / الحساب -->
 <div class="mo" id="loginM" hidden><div class="md one" role="dialog" aria-modal="true">
-  <button class="ic x" id="lx" aria-label="Close"><svg class="i"><use href="#x"/></svg></button>
+  <button class="ic x" id="lx" data-al="aClose" aria-label="Close"><svg class="i"><use href="#x"/></svg></button>
   <div id="loginBody"></div>
 </div></div>
 
 <!-- نافذة إتمام الطلب -->
 <div class="mo" id="checkoutM" hidden><div class="md one" role="dialog" aria-modal="true">
-  <button class="ic x" id="cox" aria-label="Close"><svg class="i"><use href="#x"/></svg></button>
+  <button class="ic x" id="cox" data-al="aClose" aria-label="Close"><svg class="i"><use href="#x"/></svg></button>
   <div class="frm">
     <h2 data-i="checkout" style="margin-bottom:16px"></h2>
     <div id="ordSummary"></div>
@@ -144,14 +144,14 @@
 
 <!-- نوافذ السياسات -->
 <div class="mo" id="infoM" hidden><div class="md one" role="dialog" aria-modal="true">
-  <button class="ic x" id="ix" aria-label="Close"><svg class="i"><use href="#x"/></svg></button>
+  <button class="ic x" id="ix" data-al="aClose" aria-label="Close"><svg class="i"><use href="#x"/></svg></button>
   <div><h2 id="infoT" style="margin-bottom:12px"></h2><p class="info-b" id="infoB"></p></div>
 </div></div>
 
 <!-- سلة التسوق -->
 <div class="bd" id="bd" aria-hidden="true"></div>
 <aside class="cd" id="cd">
-  <div class="cd-h"><h3 data-i="cart"></h3><button class="ic" id="dx" aria-label="Close"><svg class="i"><use href="#x"/></svg></button></div>
+  <div class="cd-h"><h3 data-i="cart"></h3><button class="ic" id="dx" data-al="aClose" aria-label="Close"><svg class="i"><use href="#x"/></svg></button></div>
   <div class="ship" id="cdShip" hidden><p id="shipTxt"></p><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="shipBar"></i></div></div>
   <div class="cd-b" id="cdBody"></div>
   <div class="cd-f" id="cdFoot"></div>
@@ -159,7 +159,7 @@
 <!-- ===================== WHEEL (عجلة الحظ) — HTML ===================== -->
 <div class="wh" id="wh" hidden>
   <div class="wh-card" id="wh-card" role="dialog" aria-modal="true" aria-labelledby="wh-title" tabindex="-1">
-    <button class="wh-x" id="wh-x" type="button" aria-label="إغلاق"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></button>
+    <button class="wh-x" id="wh-x" type="button" data-al="aClose" aria-label="إغلاق"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></button>
     <h2 id="wh-title"></h2>
     <p class="wh-sub" id="wh-sub"></p>
     <div class="wh-stage">
@@ -181,7 +181,7 @@
 <!-- /* MICRO-INTERACTIONS */ HTML — Quick View modal -->
 <div class="qv-ov" id="qv" hidden>
   <div class="qv-card" id="qv-card" role="dialog" aria-modal="true" aria-labelledby="qv-title" tabindex="-1">
-    <button class="qv-x" id="qv-x" type="button" aria-label="إغلاق"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></button>
+    <button class="qv-x" id="qv-x" type="button" data-al="aClose" aria-label="إغلاق"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></button>
     <div class="qv-gal">
       <div class="qv-main" id="qv-main"></div>
       <div class="qv-th" id="qv-th"></div>

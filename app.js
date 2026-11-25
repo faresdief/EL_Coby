@@ -7,7 +7,7 @@ const $=s=>document.querySelector(s),H=document.documentElement;
 $('#waContact').href='https://wa.me/'+WA;
 
 const byId=id=>P.find(p=>p.id===id);
-let L=S.g('lang')=='en'?1:0,cat='all',cur=null,Q=1,gi=0,DISCCODE='',discBad=false,LOCK=0,SEL={c:0,s:0};
+let L=S.g('lang')=='en'?1:0,cat='all',QS='',cur=null,Q=1,gi=0,DISCCODE='',discBad=false,LOCK=0,SEL={c:0,s:0};
 let CART=normalizeCart(S.g('cart'),P);S.s('cart',JSON.stringify(CART));
 let WISH=new Set();try{WISH=new Set(JSON.parse(S.g('wish')||'[]').filter(byId))}catch(e){}
 let USER=S.g('user')||null;
@@ -66,16 +66,15 @@ function renderTabs(){
   $('#tabs').innerHTML=['all','w','s','c'].map(k=>`<button class="tab${k==cat?' on':''}" data-c="${k}">${T(k)}</button>`).join('')+`<button class="tab${cat=='fav'?' on':''}" data-c="fav"><svg class="i"><use href="#h"/></svg>${T('favTab')} (${WISH.size})</button>`;
 }
 function renderGrid(){
-  const list=P.filter(p=>!p.addon&&(cat=='all'||(cat=='fav'?WISH.has(p.id):p.c==cat)));
-  $('#grid').innerHTML=list.length?list.map(p=>`<article class="card"><div class="tile"><button class="pic" data-o="${p.id}" aria-label="${p.n[L]}"><img src="${p.img}"${sset(p.img)} sizes="(max-width:640px) 50vw, (max-width:1000px) 33vw, 25vw" alt="${p.n[L]}" class="${p.fit?'ct':''}" loading="lazy" decoding="async" onerror="this.style.opacity=0"></button>${p.o?`<span class="badge">-${dc(p)}%</span>`:p.b?`<span class="badge new">${T('new')}</span>`:''}<button class="fav${WISH.has(p.id)?' on':''}" data-f="${p.id}" aria-label="${T('wishAdd')}" aria-pressed="${WISH.has(p.id)}"><svg class="i"><use href="#h"/></svg></button><button class="qv" data-qv="${p.id}" aria-label="${T('qvBtn')}" title="${T('qvBtn')}"><svg class="i"><use href="#eye"/></svg></button><button class="add" data-add="${p.id}">${T('add')}</button></div><h3><button class="nm" data-o="${p.id}">${p.n[L]}</button></h3><p class="price"><b>${fmt(p.p)}</b>${p.o?`<s>${fmt(p.o)}</s>`:''}</p></article>`).join(''):`<p class="none">${T('favEmpty')}</p>`;
+  const list=P.filter(p=>!p.addon&&(cat=='all'||(cat=='fav'?WISH.has(p.id):p.c==cat))&&(!QS||p.n.some(x=>x.toLowerCase().includes(QS))));
+  $('#grid').innerHTML=list.length?list.map(p=>`<article class="card"><div class="tile"><button class="pic" data-o="${p.id}" aria-label="${p.n[L]}"><img src="${p.img}"${sset(p.img)} sizes="(max-width:640px) 50vw, (max-width:1000px) 33vw, 25vw" alt="${p.n[L]}" class="${p.fit?'ct':''}" loading="lazy" decoding="async" onerror="this.style.opacity=0"></button>${p.o?`<span class="badge">-${dc(p)}%</span>`:p.b?`<span class="badge new">${T('new')}</span>`:''}<button class="fav${WISH.has(p.id)?' on':''}" data-f="${p.id}" aria-label="${T('wishAdd')}" aria-pressed="${WISH.has(p.id)}"><svg class="i"><use href="#h"/></svg></button><button class="qv" data-qv="${p.id}" aria-label="${T('qvBtn')}" title="${T('qvBtn')}"><svg class="i"><use href="#eye"/></svg></button><button class="add" data-add="${p.id}">${T('add')}</button></div><h3><button class="nm" data-o="${p.id}">${p.n[L]}</button></h3><p class="price"><b>${fmt(p.p)}</b>${p.o?`<s>${fmt(p.o)}</s>`:''}</p></article>`).join(''):`<p class="none">${T(cat=='fav'&&!QS?'favEmpty':'noRes')}</p>`;
 }
 function render(){
   H.lang=L?'en':'ar';H.dir=L?'ltr':'rtl';document.title=T('brand');
   document.querySelectorAll('[data-i]').forEach(e=>e.textContent=T(e.dataset.i));
-  $('#acct').setAttribute('aria-label',T('login'));
+  document.querySelectorAll('[data-al]').forEach(e=>e.setAttribute('aria-label',T(e.dataset.al)));
   $('.top').textContent=T('ship').replace('{x}',fmt(FREE));
   $('#q').placeholder=T('sr');$('#coDisc').placeholder=T('discCode');$('#em').placeholder=T('em');
-  $('#wishBtn').setAttribute('aria-label',T('favTab'));
   $('#lang').textContent=L?'عربي':'EN';
   $('#cnt').textContent=cartCount();
   syncWish(true);
@@ -292,6 +291,8 @@ document.addEventListener('click',e=>{
   if(t.id=='logoutBtn'){USER=null;S.s('user','');fillLogin();return}
 });
 document.addEventListener('keydown',e=>{if(e.key!='Enter')return;if(e.target.id=='discInput'){e.preventDefault();$('#discApply').click()}else if(e.target.id=='coDisc'){e.preventDefault();$('#coDiscApply').click()}});
+$('#q').addEventListener('input',e=>{QS=e.target.value.trim().toLowerCase();if(QS&&cat=='fav')cat='all';renderTabs();renderGrid()});
+$('#q').addEventListener('keydown',e=>{if(e.key=='Enter'){e.preventDefault();e.target.blur();goToSection('shop')}});
 $('#lang').onclick=()=>{L=1-L;S.s('lang',L?'en':'ar');render()};
 function setTheme(t){
   const f=$('#fade');
