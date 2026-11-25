@@ -34,6 +34,14 @@ try{
  await page.goBack();assert.equal(await page.locator('#pv').isHidden(),true);checks++;
  await page.goto(url+'#p=c-chain');await page.locator('#pv .pv-t').waitFor();assert.equal(await page.evaluate(()=>location.hash),'#product/c-chain');checks++;
  await page.locator('header a[href="#shop"]').first().click();await page.locator('.card').first().waitFor();assert.equal(await page.locator('#pv').isHidden(),true);checks++;
+ // polish: search filters products, aria labels follow language, language switch on product page, no demo wording
+ await page.goto(url);await page.locator('#grid .card').first().waitFor();
+ await page.locator('#q').fill('watch');assert.equal(await page.locator('#grid .card').count(),3);await page.locator('#q').fill('ساعة');assert.equal(await page.locator('#grid .card').count(),3);
+ await page.locator('#q').fill('zzzz');assert.equal(await page.locator('#grid .none').count(),1);await page.locator('#q').fill('');assert.equal(await page.locator('#grid .card').count(),9);checks++;
+ await page.goto(url+'#product/w-sport');await page.locator('#pv .pv-t').waitFor();await page.locator('#lang').click();assert.equal(await page.locator('#pv .pv-t').innerText(),'Black Sport Watch');
+ assert.equal(await page.locator('#theme').getAttribute('aria-label'),'Toggle theme');assert.equal(await page.locator('#dx').getAttribute('aria-label'),'Close');
+ assert.equal(await page.locator('.pv-rel img[loading=lazy]').count(),0);await page.locator('#lang').click();assert.equal(await page.locator('#theme').getAttribute('aria-label'),'تبديل المظهر');
+ await page.goto(url);await page.locator('#q').fill('watch');await page.locator('#lang').click();assert.equal(await page.locator('#grid .card').count(),3);await page.locator('#lang').click();await page.locator('#q').fill('');checks++;
  await page.locator('#lang').click();assert.equal(await page.locator('html').getAttribute('lang'),'en');assert.equal(await page.locator('.demo-banner').count(),0);checks++;
  await mkdir(root+'/test-results',{recursive:true});await page.screenshot({path:root+'/test-results/desktop.png',fullPage:true});
  await page.setViewportSize({width:390,height:844});await page.reload();await page.locator('.card').first().waitFor();assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.screenshot({path:root+'/test-results/mobile.png',fullPage:true});checks++;
