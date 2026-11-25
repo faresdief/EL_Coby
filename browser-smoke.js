@@ -26,7 +26,7 @@ try{
  await page.locator('#cartBtn').click();await page.locator('#discInput').fill('SAVE5');await page.locator('#discApply').click();await page.locator('#ckBtn').click();
  await page.locator('#coName').fill('Test');await page.locator('#coPhone').fill('01000000000');await page.locator('#coAddr').fill('Test only');
  const before=await page.evaluate(()=>localStorage.getItem('cart'));await page.locator('#coSubmit').click();assert.equal(await page.evaluate(()=>localStorage.getItem('cart')),before);assert.match(await page.evaluate(()=>window.__draft),/^https:\/\/wa.me\//);checks++;
- await page.locator('#lang').click();assert.equal(await page.locator('html').getAttribute('lang'),'en');assert.match(await page.locator('.demo-banner').innerText(),/Demo:/);checks++;
+ await page.locator('#lang').click();assert.equal(await page.locator('html').getAttribute('lang'),'en');assert.equal(await page.locator('.demo-banner').count(),0);checks++;
  await mkdir(root+'/test-results',{recursive:true});await page.screenshot({path:root+'/test-results/desktop.png',fullPage:true});
  await page.setViewportSize({width:390,height:844});await page.reload();await page.locator('.card').first().waitFor();assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.screenshot({path:root+'/test-results/mobile.png',fullPage:true});checks++;
  await page.locator('#acct').click();await page.locator('#afn').waitFor({state:'visible'});await page.locator('#loginM .md').evaluate(el=>Promise.all(el.getAnimations().map(a=>a.finished)));await page.screenshot({path:root+'/test-results/profile.png'});await page.locator('#lx').click();
