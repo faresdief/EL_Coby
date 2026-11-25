@@ -44,3 +44,11 @@ Dropped by owner decision: reviews, coupons/offers page, order confirmation/trac
 - New `season.js` draws it in a gold strip under the free-delivery bar, using the store's gold and the same pill button style. Visitors can close it; it stays closed on their device until `id` changes.
 - `seasonActive` in `commerce.js` holds the rules, with a unit test.
 - Tests: unit 20, browser smoke 27.
+
+## Round 2, Release 4: floating WhatsApp button and smarter search (branch feature/whatsapp-search)
+- Floating WhatsApp button (gold, bottom corner, icon only on phones). Opens wa.me/201282083162 with a short hello message in the page language. It sits above the product page's sticky bar on phones and the compare tray leaves room for it.
+- Search now matches product name, category words (watch/watches/ساعة/ساعات, sunglasses/glasses/نظارة, chain/bracelet/سلسلة/حظاظة, with plurals), material and colour, in both languages. Every word typed must match. Arabic spelling variants are folded: tashkeel and tatweel removed, أ إ آ ٱ -> ا, ى -> ي, ة -> ه, ئ -> ي, ؤ -> و, Arabic-Indic digits, case ignored. `normalizeText` and `matchProduct` are in `commerce.js` with tests.
+- To add a category word or synonym, edit `CAT_WORDS` in `commerce.js`.
+- Tests: unit 21, browser smoke 28.
+
+Round 2 status: releases 1 to 4 shipped. Search Console was handled separately.

@@ -1,6 +1,8 @@
 const D={
 brand:['الكوبي','ElCoby'],
 cmpBtn:['قارن','Compare'],
+waHi:['أهلًا الكوبي، عايز أستفسر عن منتج','Hi ElCoby, I have a question about a product'],
+waFab:['كلّمنا على واتساب','Chat on WhatsApp'],
 wishShare:['شارك المفضلة','Share wishlist'],sharedTab:['قائمة مشتركة','Shared wishlist'],wishSaveAll:['أضفها لمفضلتي','Save to my wishlist'],
 looksNav:['كمّل اللوك','Complete the look'],
 setDisc:['خصم الطقم','Set discount'],

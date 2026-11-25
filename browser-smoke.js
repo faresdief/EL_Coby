@@ -69,5 +69,9 @@ try{
  await page.evaluate(()=>{localStorage.clear()});await page.goto(url);await page.locator('.card').first().waitFor();
  assert.equal(await page.locator('#season').isVisible(),true);assert.ok((await page.locator('#season .season-t').innerText()).length>3);
  await page.locator('.season-x').click();assert.equal(await page.locator('#season').isHidden(),true);await page.reload();await page.locator('.card').first().waitFor();assert.equal(await page.locator('#season').isHidden(),true);checks++;
+ await page.evaluate(()=>{localStorage.clear()});await page.goto(url);await page.locator('.card').first().waitFor();
+ assert.match(await page.locator('#waFab').getAttribute('href'),/^https:\/\/wa\.me\/201282083162/);assert.equal(await page.locator('#waFab').isVisible(),true);
+ await page.locator('#q').fill('ساعه');assert.ok((await page.locator('#grid .card').count())>=1);assert.equal(await page.locator('#grid .card h3').first().innerText().then(t=>/ساعة|Watch/i.test(t)),true);
+ await page.locator('#q').fill('نظاره');const ns=await page.locator('#grid .card').count();assert.ok(ns>=1&&ns<9);await page.locator('#q').fill('xyzzy');assert.equal(await page.locator('#grid .card').count(),0);await page.locator('#q').fill('');assert.equal(await page.locator('#grid .card').count(),9);checks++;
  assert.deepEqual(errors,[]);console.log(`Browser smoke passed: ${checks} checks; no JavaScript errors; WhatsApp intercepted, nothing sent.`);
 }finally{await browser.close();await new Promise(r=>server.close(r))}

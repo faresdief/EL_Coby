@@ -2,7 +2,7 @@
 
 State: see DEVLOG.md for what shipped per release.
 
-Round 2 plan (owner approved): 1 compare (done), 2 remembered customer + order again + shared wishlist (done), 3 seasonal banner from one data entry, 4 floating WhatsApp + smart search. Search Console is handled by another agent. Dropped for good: reviews, coupons page, order tracking, admin panel.
+Round 2 (owner approved) is complete: compare, remembered customer + order again + shared wishlist, seasonal banner (edit offers.js), floating WhatsApp + smart search. Search Console was handled separately. Dropped for good: reviews, coupons page, order tracking, admin panel.
 
 Upload tip: the GitHub file picker renames files with number prefixes. Use drag-drop injection (DataTransfer + drop event on file-attachment) to keep exact names.
 
