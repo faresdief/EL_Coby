@@ -366,3 +366,11 @@ html[dir=rtl] .pv-nav.prev svg{transform:rotate(-90deg)}html[dir=rtl] .pv-nav.ne
 
 /* ===== العميل المحفوظ + اطلب تاني ===== */
 .cust-f{color:var(--acc);text-decoration:underline;font-size:inherit;margin-inline-start:6px}
+
+/* ===== شريط العروض الموسمية (من offers.js) ===== */
+.season{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;background:var(--acc);color:var(--afg);text-align:center;font-size:.82rem;font-weight:600;padding:6px 40px;position:relative}
+.season[hidden]{display:none}
+.season-a{background:var(--afg);color:var(--acc);border-radius:99px;padding:2px 12px;font-size:.76rem}
+.season-x{position:absolute;inset-inline-end:8px;top:50%;margin-top:-13px;width:26px;height:26px;display:grid;place-items:center;color:inherit;opacity:.75}
+.season-x:hover{opacity:1}.season-x svg{width:15px;height:15px}
+@media(max-width:640px){.season{flex-wrap:nowrap;font-size:.76rem;gap:8px;padding:5px 34px}.season-a{white-space:nowrap;padding:2px 10px}}

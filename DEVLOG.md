@@ -38,3 +38,9 @@ Dropped by owner decision: reviews, coupons/offers page, order confirmation/trac
 - Hooks in `app.js`: `api.prefill`, `api.onOrder`, `api.cartExtra`.
 - Cleanup: the nine numbered junk copies (1-app.js ... 9-HANDOFF.md) that PR #10 added by mistake are removed in this release (owner approved).
 - Tests: unit 19, browser smoke 26.
+
+## Round 2, Release 3: seasonal offers banner (branch feature/season-banner)
+- New `offers.js` is the only file to edit: `on` (false turns it off), `id` (change it so people who closed it see it again), `until` ('YYYY-MM-DD' or '' for none, hides itself after that day), `ar`/`en` text, `cta` button text and `link`.
+- New `season.js` draws it in a gold strip under the free-delivery bar, using the store's gold and the same pill button style. Visitors can close it; it stays closed on their device until `id` changes.
+- `seasonActive` in `commerce.js` holds the rules, with a unit test.
+- Tests: unit 20, browser smoke 27.

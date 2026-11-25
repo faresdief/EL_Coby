@@ -100,3 +100,15 @@ export function parseWish(raw,products){
   }
   return seen;
 }
+
+// Seasonal banner: shown when on, not past its end date (YYYY-MM-DD, local time) and not closed by the visitor.
+export function seasonActive(s,now,dismissedId){
+  if(!s||!s.on||!s.id||dismissedId===s.id)return false;
+  if(!s.ar&&!s.en)return false;
+  if(s.until){
+    const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s.until);if(!m)return false;
+    const end=new Date(+m[1],+m[2]-1,+m[3],23,59,59);
+    if(now>end)return false;
+  }
+  return true;
+}

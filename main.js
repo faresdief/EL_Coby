@@ -5,3 +5,4 @@ import './product.js';
 import './looks.js';
 import './compare.js';
 import './customer.js';
+import './season.js';

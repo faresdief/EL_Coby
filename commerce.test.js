@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {P,CODES,FREE,SET_TIERS} from './data.js';
-import {gallerySlides,relatedProducts,normalizeCart,parseCartLine,countCart,addCartItem,setCartQuantity,discountAmount,hasFreeShippingCode,calculateTotals,setDiscountPct,parseLook,lookLink,parseWish} from './commerce.js';
+import {gallerySlides,relatedProducts,normalizeCart,parseCartLine,countCart,addCartItem,setCartQuantity,discountAmount,hasFreeShippingCode,calculateTotals,setDiscountPct,parseLook,lookLink,parseWish,seasonActive} from './commerce.js';
 const watch='w-classic~0~';
 test('malformed and non-object storage never crashes startup',()=>{
  for(const raw of ['{','null','[]','42','"hello"',null,undefined])assert.deepEqual(normalizeCart(raw,P),{});
@@ -98,4 +98,13 @@ test('wishlist link keeps only real products, no repeats',()=>{
  const a=P.find(x=>!x.addon),b=P.filter(x=>!x.addon)[1],x=P.find(x=>x.addon);
  assert.deepEqual(parseWish(a.id+',nope,'+b.id+','+a.id+','+x.id,P),[a.id,b.id]);
  assert.deepEqual(parseWish('',P),[]);
+});
+test('seasonal banner shows only when on, in date and not closed',()=>{
+ const s={on:true,id:'a',until:'2026-12-31',ar:'x',en:'y'},d=new Date(2026,11,31,12);
+ assert.equal(seasonActive(s,d,null),true);
+ assert.equal(seasonActive({...s,on:false},d,null),false);
+ assert.equal(seasonActive(s,new Date(2027,0,1),null),false);
+ assert.equal(seasonActive(s,d,'a'),false);
+ assert.equal(seasonActive({...s,until:''},new Date(2030,0,1),null),true);
+ assert.equal(seasonActive({...s,until:'bad'},d,null),false);
 });
