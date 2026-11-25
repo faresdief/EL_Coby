@@ -291,7 +291,6 @@ main>section[tabindex="-1"]:focus{outline:0}
 @keyframes secInSoft{from{opacity:.4;transform:translate3d(0,16px,0)}to{opacity:1;transform:none}}
 .sec-anim .sec-h h2::after{content:"";display:block;width:56px;height:3px;margin:10px auto 0;border-radius:3px;background:var(--acc);transform-origin:center;animation:secBar 1.4s ease var(--sec-delay,0ms) both}
 @keyframes secBar{0%{transform:scaleX(0);opacity:1}55%{transform:scaleX(1);opacity:1}100%{transform:scaleX(1);opacity:0}}
-.demo-banner{padding:12px 20px;margin:0;text-align:center;background:var(--bg2);font-size:13px;line-height:1.8;border-bottom:1px solid var(--line)}
 
 /* Larger touch area on phones, no visual change */
 @media(pointer:coarse){.lang{position:relative}.lang::after{content:"";position:absolute;inset:-8px -4px}}
