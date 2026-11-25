@@ -67,14 +67,15 @@ const COL={
   brown:{n:['بني','Brown'],h:'#6b4423'},white:{n:['أبيض','White'],h:'#f4f1ea'}
 };
 const cols=(...k)=>k.map(x=>COL[x]);
+const SZ_WATCH=[['38 مم','38 mm'],['40 مم','40 mm'],['42 مم','42 mm']];
 const SZ_CHAIN=[['45 سم','45 cm'],['50 سم','50 cm'],['55 سم','55 cm']];
 const SZ_BRC=[['18 سم','18 cm'],['20 سم','20 cm'],['22 سم','22 cm']];
 const OFFER_MIN=15; /* مدة صلاحية كود العجلة بالدقايق — العدّاد بيعرضها والكود فعلًا بيبطل بعدها */
 const FREE=1500; /* حد الشحن المجاني بالجنيه — بيتحسب بعد الخصم */
 const P=[
-{id:'w-classic',c:'w',img:'https://images.unsplash.com/photo-1620625515032-6ed0c1790c75?w=900&auto=format&fit=crop&q=80',n:['ساعة كلاسيك','Classic Watch'],cl:['فضي بميناء أبيض','Silver, white dial'],m:['علبة معدنية','Metal case'],p:900,o:1000,colors:cols('silver','gold','black')},
-{id:'w-sport',c:'w',img:'https://images.unsplash.com/photo-1622434641406-a158123450f9?w=900&auto=format&fit=crop&q=80',n:['ساعة سبورت سوداء','Black Sport Watch'],cl:['أسود وفضي','Black & silver'],m:['علبة معدنية','Metal case'],p:1100,b:'new',colors:cols('black','navy','green')},
-{id:'w-casual',c:'w',img:'https://images.unsplash.com/photo-1604242692760-2f7b0c26856d?w=900&auto=format&fit=crop&q=80',n:['ساعة كاجوال','Casual Watch'],cl:['ذهبي وأبيض','Gold & white'],m:['علبة معدنية','Metal case'],p:990,o:1100,colors:cols('gold','silver','rose')},
+{id:'w-classic',c:'w',img:'https://images.unsplash.com/photo-1620625515032-6ed0c1790c75?w=900&auto=format&fit=crop&q=80',n:['ساعة كلاسيك','Classic Watch'],cl:['فضي بميناء أبيض','Silver, white dial'],m:['علبة معدنية','Metal case'],p:900,o:1000,colors:cols('silver','gold','black'),sizes:SZ_WATCH},
+{id:'w-sport',c:'w',img:'https://images.unsplash.com/photo-1622434641406-a158123450f9?w=900&auto=format&fit=crop&q=80',n:['ساعة سبورت سوداء','Black Sport Watch'],cl:['أسود وفضي','Black & silver'],m:['علبة معدنية','Metal case'],p:1100,b:'new',colors:cols('black','navy','green'),sizes:SZ_WATCH},
+{id:'w-casual',c:'w',img:'https://images.unsplash.com/photo-1604242692760-2f7b0c26856d?w=900&auto=format&fit=crop&q=80',n:['ساعة كاجوال','Casual Watch'],cl:['ذهبي وأبيض','Gold & white'],m:['علبة معدنية','Metal case'],p:990,o:1100,colors:cols('gold','silver','rose'),sizes:SZ_WATCH},
 {id:'s-black',c:'s',img:'https://images.unsplash.com/photo-1584036553516-bf83210aa16c?w=900&auto=format&fit=crop&q=80',n:['نظارة سوداء','Black Sunglasses'],cl:['أسود','Black'],m:['إطار خفيف بعدسات داكنة','Lightweight frame, dark lenses'],p:450,o:500,colors:cols('black','brown')},
 {id:'s-gold',c:'s',img:'https://images.unsplash.com/photo-1567473810954-507d59716c25?w=900&auto=format&fit=crop&q=80',n:['نظارة بفريم ذهبي','Gold Frame Sunglasses'],cl:['فريم ذهبي','Gold frame'],m:['إطار معدني ذهبي','Gold-tone metal frame'],p:480,b:'new',colors:cols('gold','silver')},
 {id:'s-white',c:'s',img:'https://images.unsplash.com/photo-1508296695146-257a814070b4?w=900&auto=format&fit=crop&q=80',n:['نظارة بإطار أبيض','White Frame Sunglasses'],cl:['إطار أبيض بعدسات رمادي','White frame, grey lenses'],m:['إطار خفيف بعدسات داكنة','Lightweight frame, dark lenses'],p:390,colors:cols('white','black')},

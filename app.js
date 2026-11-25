@@ -14,6 +14,8 @@ let USER=S.g('user')||null;
 let QUICK=null,CO_SRC='cart';
 
 const T=k=>D[k][L];
+/* واجهة صغيرة للوحدات الجديدة (صفحة المنتج وغيرها) من غير ما نلمس باقي الكود */
+const api={hooks:[],isWish:id=>WISH.has(id),toggleWish:id=>toggleWish(id),buyNow:(id,q,c,s)=>{QUICK={id,q,c,s};openCheckout('quick')},openCart:()=>openDrawer(),setCat:k=>{cat=k;renderTabs();renderGrid()}};
 const esc=v=>String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const dc=p=>Math.round(100-p.p*100/p.o);
 const fmt=v=>L?'EGP '+Math.round(v).toLocaleString('en-US'):Math.round(v).toLocaleString('ar-EG')+' ج.م';
@@ -84,6 +86,7 @@ function render(){
   if($('#loginM').hidden===false)fillLogin();
   if(drawerOpen())renderCart();
   if(cur!=null)fillM();
+  api.hooks.forEach(f=>f());
 }
 
 /* ---------- المفضلة ---------- */
@@ -105,7 +108,7 @@ function fillGal(){
   $('#mm').innerHTML=`<img src="${g[Math.min(gi,g.length-1)][0]}" class="${cl}" alt="${p.n[L]}" style="${g[Math.min(gi,g.length-1)][1]}" onerror="this.style.opacity=0">`;
   $('#th').innerHTML=g.length<2?'':g.map((x,k)=>`<button class="${k==gi?'on':''}" data-g="${k}" aria-label="${k+1}"><img class="${cl}" src="${x[0]}" alt="" style="${x[1]}"></button>`).join('');
 }
-const shareUrl=id=>location.href.split('#')[0]+'#p='+id;
+const shareUrl=id=>location.href.split('#')[0]+'#product/'+id;
 function fillM(){
   const p=byId(cur);fillGal();
   const colHtml=p.colors?`<div class="vr"><span class="vl">${T('selColor')}: <b id="colName">${p.colors[SEL.c].n[L]}</b></span><div class="sws">${p.colors.map((c,i)=>`<button class="sw${i==SEL.c?' on':''}" data-col="${i}" style="--sw:${c.h}" aria-label="${c.n[L]}" aria-pressed="${i==SEL.c}"></button>`).join('')}</div></div>`:'';
@@ -121,10 +124,10 @@ function selUpdate(){
   if(p.sizes)$('#szName').textContent=p.sizes[SEL.s][L];
 }
 let lf;
+/* صفحة المنتج الكاملة (product.js) بتحل محل النافذة القديمة. الرابط القديم #p=id لسه شغال */
 function openM(id){
   if(!byId(id)||byId(id).addon)return;
-  cur=id;Q=1;gi=0;SEL={c:0,s:0};lf=document.activeElement;fillM();openModal('#mo');$('#mx').focus();
-  try{history.replaceState(null,'',location.href.split('#')[0]+'#p='+id)}catch(e){}
+  location.hash='#product/'+id;
 }
 function closeM(){
   cur=null;closeModal('#mo');lf&&lf.focus();
@@ -135,8 +138,8 @@ $('#mo').addEventListener('click',e=>{if(e.target.id=='mo')closeM()});
 function hashOpen(){
   const m=location.hash.match(/^#p=([\w-]+)$/);
   if(!m||!byId(m[1])||byId(m[1]).addon)return;
-  if(cur==null)openM(m[1]);
-  else if(cur!==m[1]){cur=m[1];Q=1;gi=0;SEL={c:0,s:0};fillM()} /* مودال مفتوح ورابط منتج تاني اتلصق: بدّل المحتوى من غير ما نقفل الاسكرول مرتين */
+  try{history.replaceState(null,'',location.href.split('#')[0]+'#product/'+m[1])}catch(e){}
+  dispatchEvent(new HashChangeEvent('hashchange')); /* رابط قديم: حوّله لصفحة المنتج */
 }
 addEventListener('hashchange',hashOpen);
 
@@ -314,4 +317,4 @@ document.addEventListener('keydown',e=>{
 render();
 hashOpen();
 
-export {P,byId,fmt,addToCart,openM,WA,FREE,CODES,OFFER_MIN,DISCCODE,discAmt,codeShip,lock,unlock,LOCK,goToSection};
+export {api,P,byId,fmt,addToCart,openM,WA,FREE,CODES,OFFER_MIN,DISCCODE,discAmt,codeShip,lock,unlock,LOCK,goToSection};

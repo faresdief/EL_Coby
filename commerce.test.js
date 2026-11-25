@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {P,CODES,FREE} from './data.js';
-import {normalizeCart,parseCartLine,countCart,addCartItem,setCartQuantity,discountAmount,hasFreeShippingCode,calculateTotals} from './commerce.js';
+import {gallerySlides,relatedProducts,normalizeCart,parseCartLine,countCart,addCartItem,setCartQuantity,discountAmount,hasFreeShippingCode,calculateTotals} from './commerce.js';
 const watch='w-classic~0~';
 test('malformed and non-object storage never crashes startup',()=>{
  for(const raw of ['{','null','[]','42','"hello"',null,undefined])assert.deepEqual(normalizeCart(raw,P),{});
@@ -10,11 +10,11 @@ test('rejects negative, string, fractional, excessive and nonfinite quantities',
  for(const q of [-3,0,'2',1.5,100,Infinity,NaN])assert.deepEqual(normalizeCart({[watch]:q},P),{});
 });
 test('unknown products and invalid variants do not affect totals or badge',()=>{
- const cart={'deleted~~':2,'w-classic~99~':2,'w-classic~-1~':2,'w-classic~0~2':2,'x-gift~0~':2};
+ const cart={'deleted~~':2,'w-classic~99~':2,'w-classic~-1~':2,'w-classic~0~3':2,'x-gift~0~':2};
  assert.deepEqual(normalizeCart(cart,P),{});assert.equal(countCart(cart,P),0);
 });
 test('legacy product-index keys migrate and merge with default variant',()=>{
- assert.deepEqual(normalizeCart({'0':2,[watch]:3},P),{[watch]:5});
+ assert.deepEqual(normalizeCart({'0':2,[watch]:3},P),{'w-classic~0~0':5});
  assert.equal(parseCartLine('6',1,P).k,'c-chain~0~0');
 });
 test('variant quantities remain separate and additions cap at 99',()=>{
@@ -56,4 +56,24 @@ test('cart subtotal and automatic free-shipping threshold use discounted total',
 });
 test('invalid lines cannot create negative or nonfinite totals',()=>{
  assert.deepEqual(calculateTotals([{p:{p:900},q:-2},{p:{p:-5},q:1},{p:{p:5},q:'2'}]),{sub:0,disc:0,tot:0});
+});
+
+test('old watch cart keys without a size still load after sizes were added',()=>{
+ assert.equal(parseCartLine('w-classic~0~',1,P).k,'w-classic~0~0');
+ assert.equal(countCart({'w-classic~0~':2},P),2);
+});
+test('product gallery: real photos win, otherwise zoom views, colour image replaces base',()=>{
+ const a={img:'a.jpg'};assert.equal(gallerySlides(a).length,3);
+ assert.equal(gallerySlides({img:'a.jpg',z:0}).length,1);
+ const b={img:'a.jpg',more:['b.jpg','c.jpg','d.jpg']};assert.deepEqual(gallerySlides(b).map(x=>x[0]),['a.jpg','b.jpg','c.jpg','d.jpg']);
+ const c={img:'a.jpg',colors:[{img:'x.jpg'},{}],more:['b.jpg']};assert.equal(gallerySlides(c,0)[0][0],'x.jpg');assert.equal(gallerySlides(c,1)[0][0],'a.jpg');
+ assert.deepEqual(gallerySlides(null),[]);
+});
+test('related products prefer the same category, skip itself and add-ons',()=>{
+ const r=relatedProducts(P,'w-classic',4);assert.equal(r.length,4);
+ assert.ok(r.every(p=>!p.addon&&p.id!=='w-classic'));assert.deepEqual(r.slice(0,2).map(p=>p.c),['w','w']);
+ assert.deepEqual(relatedProducts(P,'nope'),[]);
+});
+test('watches now offer sizes and chain sizes still work',()=>{
+ assert.equal(P.find(p=>p.id==='w-classic').sizes.length,3);assert.equal(P.find(p=>p.id==='c-chain').sizes.length,3);
 });

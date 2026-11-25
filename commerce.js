@@ -54,3 +54,18 @@ export function calculateTotals(lines,code='',codes={},expired=false){
   const disc=discountAmount(sub,code,codes,expired);
   return {sub,disc,tot:sub-disc};
 }
+/* صور المنتج: الصورة الأساسية (أو صورة اللون) + more لو فيه صور حقيقية. وإلا لقطات مقرّبة من نفس الصورة. */
+export const ZOOM_VIEWS=['','transform:scale(1.9)','transform:scale(1.9);transform-origin:15% 85%'];
+export function gallerySlides(p,colorIdx=0){
+  if(!p)return [];
+  const col=p.colors&&p.colors[colorIdx],base=(col&&col.img)||p.img;
+  if(Array.isArray(p.more)&&p.more.length)return [base,...p.more].map(u=>[u,'']);
+  if(p.z===0)return [[base,'']];
+  return ZOOM_VIEWS.map(z=>[base,z]);
+}
+/* منتجات مشابهة: نفس القسم أولًا ثم أي منتج تاني. بدون الإضافات وبدون المنتج نفسه. */
+export function relatedProducts(products,id,n=4){
+  const me=products.find(p=>p.id===id);if(!me)return [];
+  const rest=products.filter(p=>!p.addon&&p.id!==id);
+  return [...rest.filter(p=>p.c===me.c),...rest.filter(p=>p.c!==me.c)].slice(0,n);
+}

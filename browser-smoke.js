@@ -26,6 +26,14 @@ try{
  await page.locator('#cartBtn').click();await page.locator('#discInput').fill('SAVE5');await page.locator('#discApply').click();await page.locator('#ckBtn').click();
  await page.locator('#coName').fill('Test');await page.locator('#coPhone').fill('01000000000');await page.locator('#coAddr').fill('Test only');
  const before=await page.evaluate(()=>localStorage.getItem('cart'));await page.locator('#coSubmit').click();assert.equal(await page.evaluate(()=>localStorage.getItem('cart')),before);assert.match(await page.evaluate(()=>window.__draft),/^https:\/\/wa.me\//);checks++;
+ // product page: opens from card, variants, add to cart, back, legacy link, language
+ await page.locator('.nm').first().click();await page.locator('#pv .pv-t').waitFor();assert.equal(await page.evaluate(()=>location.hash),'#product/w-classic');assert.equal(await page.locator('main').isHidden(),true);checks++;
+ await page.locator('[data-ps="2"]').click();await page.locator('[data-pc="1"]').click();await page.locator('[data-pq="1"]').click();await page.locator('#pvAdd').click();
+ assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('cart'))['w-classic~1~2']),2);checks++;
+ await page.locator('.pv-nav.next').click();assert.equal(await page.locator('.pv-th .on').count(),1);
+ await page.goBack();assert.equal(await page.locator('#pv').isHidden(),true);checks++;
+ await page.goto(url+'#p=c-chain');await page.locator('#pv .pv-t').waitFor();assert.equal(await page.evaluate(()=>location.hash),'#product/c-chain');checks++;
+ await page.locator('header a[href="#shop"]').first().click();await page.locator('.card').first().waitFor();assert.equal(await page.locator('#pv').isHidden(),true);checks++;
  await page.locator('#lang').click();assert.equal(await page.locator('html').getAttribute('lang'),'en');assert.equal(await page.locator('.demo-banner').count(),0);checks++;
  await mkdir(root+'/test-results',{recursive:true});await page.screenshot({path:root+'/test-results/desktop.png',fullPage:true});
  await page.setViewportSize({width:390,height:844});await page.reload();await page.locator('.card').first().waitFor();assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.screenshot({path:root+'/test-results/mobile.png',fullPage:true});checks++;
