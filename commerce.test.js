@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {P,CODES,FREE,SET_TIERS} from './data.js';
-import {gallerySlides,relatedProducts,normalizeCart,parseCartLine,countCart,addCartItem,setCartQuantity,discountAmount,hasFreeShippingCode,calculateTotals,setDiscountPct,parseLook,lookLink} from './commerce.js';
+import {gallerySlides,relatedProducts,normalizeCart,parseCartLine,countCart,addCartItem,setCartQuantity,discountAmount,hasFreeShippingCode,calculateTotals,setDiscountPct,parseLook,lookLink,parseWish} from './commerce.js';
 const watch='w-classic~0~';
 test('malformed and non-object storage never crashes startup',()=>{
  for(const raw of ['{','null','[]','42','"hello"',null,undefined])assert.deepEqual(normalizeCart(raw,P),{});
@@ -93,4 +93,9 @@ test('look link parses only valid, one per category',()=>{
  const w=P.find(x=>x.c==='w'),s=P.find(x=>x.c==='s');
  assert.deepEqual(parseLook(w.id+',bad,'+s.id+','+w.id,P),{w:w.id,s:s.id});
  assert.equal(lookLink({w:w.id,s:s.id}),w.id+','+s.id);
+});
+test('wishlist link keeps only real products, no repeats',()=>{
+ const a=P.find(x=>!x.addon),b=P.filter(x=>!x.addon)[1],x=P.find(x=>x.addon);
+ assert.deepEqual(parseWish(a.id+',nope,'+b.id+','+a.id+','+x.id,P),[a.id,b.id]);
+ assert.deepEqual(parseWish('',P),[]);
 });
