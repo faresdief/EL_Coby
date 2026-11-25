@@ -2,193 +2,62 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-    <!-- Link preview (Open Graph / Twitter) -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://faresdief.github.io/EL_Coby/">
-    <meta property="og:title" content="الكوبي">
-    <meta property="og:description" content="واجهة متجر تجريبية بالعربية والإنجليزية.">
-    <meta property="og:locale" content="ar_EG">
-    <meta property="og:image" content="https://faresdief.github.io/EL_Coby/og-image.jpg">
-    <meta property="og:image:type" content="image/jpeg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="الكوبي">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="الكوبي">
-    <meta name="twitter:description" content="واجهة متجر تجريبية بالعربية والإنجليزية.">
-    <meta name="twitter:image" content="https://faresdief.github.io/EL_Coby/og-image.jpg">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>الكوبي</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="boot.js"></script>
-<link rel="stylesheet" href="store.css">
+<title>الكوبي | متجر جادجتات وإكسسوارات (نسخة تجريبية)</title>
+<meta name="description" content="الكوبي: واجهة متجر جادجتات وإكسسوارات بالعربية تجريبية. تصفح، ابحث، أضف للسلة وأرسل طلبك على واتساب.">
+<meta name="theme-color" content="#0b0b0d">
+<link rel="canonical" href="https://faresdief.github.io/EL_Coby/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://faresdief.github.io/EL_Coby/">
+<meta property="og:title" content="الكوبي | متجر جادجتات وإكسسوارات (نسخة تجريبية)">
+<meta property="og:description" content="واجهة متجر جادجتات وإكسسوارات بالعربية مع سلة وطلب عبر واتساب.">
+<meta property="og:locale" content="ar_EG">
+<meta property="og:image" content="https://faresdief.github.io/EL_Coby/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="shop.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"الكوبي","url":"https://faresdief.github.io/EL_Coby/","inLanguage":"ar"}</script>
 </head>
 <body>
-<!-- /* MICRO-INTERACTIONS */ HTML — Countdown bar (sticky top) -->
-<div class="mi-bar" id="mi-bar" role="region" aria-label="عرض محدود" aria-hidden="true">
-  <div class="mi-bar-w"><div class="mi-bar-in">
-    <span class="mi-bar-msg" id="mi-msg"></span>
-    <span class="mi-clock" id="mi-clock" aria-live="off">15:00</span>
-    <button class="mi-bar-copy" id="mi-copy" type="button"></button>
-    <button class="mi-bar-x" id="mi-x" type="button" aria-label="إغلاق"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></button>
-  </div></div>
-</div>
-<svg width="0" height="0" style="position:absolute"><defs>
-<symbol id="s" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
-<symbol id="u" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></symbol>
-<symbol id="h" viewBox="0 0 24 24"><path d="M12 20s-8-4.6-8-11a4.500 4.500 0 0 1 8-2.800A4.500 4.500 0 0 1 20 9c0 6.400-8 11-8 11z"/></symbol>
-<symbol id="b" viewBox="0 0 24 24"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></symbol>
-<symbol id="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.500 1.500M17.500 17.500 19 19M5 19l1.500-1.500M17.500 6.500 19 5"/></symbol>
-<symbol id="moon" viewBox="0 0 24 24"><path d="M20 14.500A8 8 0 0 1 9.500 4 8 8 0 1 0 20 14.500z"/></symbol>
-<symbol id="truck" viewBox="0 0 24 24"><path d="M2 6h11v10H2zM13 10h4l3 3v3h-7"/><circle cx="7" cy="17.500" r="1.800"/><circle cx="17" cy="17.500" r="1.800"/></symbol>
-<symbol id="cash" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></symbol>
-<symbol id="eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
-<symbol id="x" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5 5 19"/></symbol>
-<symbol id="trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/></symbol>
-<symbol id="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
-<symbol id="gift" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v8h14v-8M12 8v12M12 8C10 8 8 7 8 5.5S9.5 3 12 5c2.5-2 4-.5 4 .5S14 8 12 8z"/></symbol>
-<symbol id="sparkle" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></symbol>
-<symbol id="wa" viewBox="0 0 24 24"><path d="M4 20l1.3-4.2A8 8 0 1 1 8.2 18.8L4 20z"/><path d="M9 9.5c.3 2 1.8 3.6 3.8 4.3l1-1.1 1.7.8"/></symbol>
-<symbol id="copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></symbol>
-</defs></svg>
-
-<div class="top" data-i="ship"></div>
-<header class="hd"><div class="wrap hd-in">
-  <a class="logo" href="#"><span data-i="brand"></span><b>.</b></a>
-  <nav><a href="#" data-i="home"></a><a href="#shop" data-i="shop"></a><a href="#faq" data-i="faqNav"></a><a href="#" data-i="about" data-info="about"></a><a href="#" id="waContact" target="_blank" rel="noopener" data-i="contact"></a></nav>
-  <label class="search"><svg class="i"><use href="#s"/></svg><input id="q" type="search"></label>
-  <button class="lang" id="lang"></button>
-  <button class="ic" id="theme" aria-label="Theme"><svg class="i to-d"><use href="#moon"/></svg><svg class="i to-l"><use href="#sun"/></svg></button>
-  <button class="ic" id="wishBtn" aria-label="Wishlist"><svg class="i"><use href="#h"/></svg><span class="cnt" id="wcnt" hidden>0</span></button>
-  <button class="ic" id="acct" aria-label="Account"><svg class="i"><use href="#u"/></svg></button>
-  <button class="ic" id="cartBtn" aria-label="Cart"><svg class="i"><use href="#b"/></svg><span class="cnt" id="cnt">0</span></button>
-</div></header>
-
-<p class="demo-banner" data-i="demoBanner"></p>
+<header class="top">
+  <a class="logo" href="#" id="logo">الكوبي</a>
+  <button class="cartbtn" id="openCart" aria-label="فتح السلة">السلة <b id="count">0</b></button>
+</header>
+<div class="sample" id="sampleBar" hidden></div>
 <main>
-<section class="wrap"><div class="hero">
-  <div class="hero-t"><h1 data-i="h1"></h1><p data-i="sub"></p><a class="btn gold" href="#shop" data-i="cta"></a></div>
-  <div class="hero-a"><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=1200&auto=format&fit=crop&q=80" alt="" fetchpriority="high" onerror="this.style.opacity=0"></div>
-</div></section>
-
-<section class="wrap vals">
-  <div class="val"><svg class="i"><use href="#truck"/></svg><div><b data-i="v1"></b><span data-i="v1d"></span></div></div>
-  <div class="val"><svg class="i"><use href="#cash"/></svg><div><b data-i="v2"></b><span data-i="v2d"></span></div></div>
-  <div class="val"><svg class="i"><use href="#eye"/></svg><div><b data-i="v3"></b><span data-i="v3d"></span></div></div>
-</section>
-
-<section class="wrap sec" id="shop">
-  <div class="sec-h"><h2 data-i="pt"></h2><p data-i="ps"></p></div>
-  <div class="tabs" id="tabs"></div>
-  <div class="grid" id="grid"></div>
-</section>
-
-<section class="wrap sec" id="reviews">
-  <div class="sec-h"><h2 data-i="rt"></h2><p data-i="rs"></p></div>
-  <div class="revs" id="revs"></div>
-</section>
-
-<section class="wrap sec" id="faq">
-  <div class="sec-h"><h2 data-i="faqT"></h2><p data-i="faqS"></p></div>
-  <div class="faq" id="faqList"></div>
-</section>
+  <section class="hero">
+    <p class="eyebrow">مجموعة الجادجتات</p>
+    <h1 id="brand">الكوبي</h1>
+    <p id="tagline" class="tag"></p>
+    <a class="cta" href="#shop">تصفح المنتجات</a>
+  </section>
+  <section id="shop" class="shop">
+    <div class="tools">
+      <input id="q" type="search" placeholder="ابحث عن منتج..." aria-label="بحث">
+      <select id="sort" aria-label="ترتيب">
+        <option value="">الترتيب الافتراضي</option>
+        <option value="asc">السعر: الأقل أولًا</option>
+        <option value="desc">السعر: الأعلى أولًا</option>
+      </select>
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="التصنيفات"></div>
+    <p id="empty" class="empty" hidden>مفيش منتجات مطابقة للبحث.</p>
+    <div class="grid" id="grid"></div>
+  </section>
 </main>
+<footer class="foot"><p id="footNote"></p></footer>
 
-<footer><div class="wrap">
-  <div class="ft">
-    <div><a class="logo" href="#"><span data-i="brand"></span><b>.</b></a></div>
-    <div><h4 data-i="shop"></h4><a href="#shop" data-i="w"></a><a href="#shop" data-i="s"></a><a href="#shop" data-i="c"></a></div>
-    <div><h4 data-i="help"></h4><a href="#" data-info="about" data-i="about"></a><a href="#" data-info="ret" data-i="ret"></a><a href="#" data-info="term" data-i="terms"></a><a href="#faq" data-i="faqNav"></a></div>
-    <div><h4 data-i="nl"></h4><form class="sub" onsubmit="return false"><input id="em" type="email"><button data-i="go"></button></form></div>
+<div class="shade" id="shade" hidden></div>
+<aside class="drawer" id="drawer" aria-label="السلة" aria-hidden="true">
+  <div class="dhead"><h2>سلتك</h2><button id="closeCart" aria-label="إغلاق">✕</button></div>
+  <div id="items" class="items"></div>
+  <div class="dfoot">
+    <label>اسمك (اختياري)<input id="cname" autocomplete="name"></label>
+    <div class="total"><span>الإجمالي</span><b id="total">0</b></div>
+    <a class="wa" id="wa" href="#" target="_blank" rel="noopener">اطلب عبر واتساب</a>
+    <p class="small">يفتح واتساب برسالة جاهزة. لا يتم إرسال شيء تلقائيًا. الشحن والدفع يُتفق عليهما في المحادثة.</p>
   </div>
-  <p class="copy" data-i="cp"></p>
-</div></footer>
-
-<!-- نافذة تفاصيل المنتج -->
-<div class="mo" id="mo" hidden><div class="md" role="dialog" aria-modal="true" aria-labelledby="mt">
-  <button class="ic x" id="mx" aria-label="Close"><svg class="i"><use href="#x"/></svg></button>
-  <div><div class="mm" id="mm"></div><div class="th" id="th"></div></div>
-  <div class="mi" id="mi"></div>
-</div></div>
-
-<!-- نافذة تسجيل الدخول / الحساب -->
-<div class="mo" id="loginM" hidden><div class="md one" role="dialog" aria-modal="true">
-  <button class="ic x" id="lx" aria-label="Close"><svg class="i"><use href="#x"/></svg></button>
-  <div id="loginBody"></div>
-</div></div>
-
-<!-- نافذة إتمام الطلب -->
-<div class="mo" id="checkoutM" hidden><div class="md one" role="dialog" aria-modal="true">
-  <button class="ic x" id="cox" aria-label="Close"><svg class="i"><use href="#x"/></svg></button>
-  <div class="frm">
-    <h2 data-i="checkout" style="margin-bottom:16px"></h2>
-    <div id="ordSummary"></div>
-    <div class="disc" style="margin-bottom:10px"><input id="coDisc" type="text" autocomplete="off" style="margin-bottom:0"><button type="button" id="coDiscApply" data-i="apply"></button></div>
-    <p class="err" id="coDiscErr" hidden></p>
-    <label data-i="coName"></label><input id="coName" type="text">
-    <label data-i="coPhone"></label><input id="coPhone" type="tel" inputmode="tel">
-    <label data-i="coGov"></label><select id="gov"></select>
-    <label data-i="coAddr"></label><textarea id="coAddr"></textarea>
-    <p class="err" id="coErr" hidden></p>
-    <button class="btn gold" id="coSubmit" style="width:100%" data-i="coSub"></button>
-    <p class="mute-sm" data-i="coNote"></p>
-  </div>
-</div></div>
-
-<!-- نوافذ السياسات -->
-<div class="mo" id="infoM" hidden><div class="md one" role="dialog" aria-modal="true">
-  <button class="ic x" id="ix" aria-label="Close"><svg class="i"><use href="#x"/></svg></button>
-  <div><h2 id="infoT" style="margin-bottom:12px"></h2><p class="info-b" id="infoB"></p></div>
-</div></div>
-
-<!-- سلة التسوق -->
-<div class="bd" id="bd" aria-hidden="true"></div>
-<aside class="cd" id="cd">
-  <div class="cd-h"><h3 data-i="cart"></h3><button class="ic" id="dx" aria-label="Close"><svg class="i"><use href="#x"/></svg></button></div>
-  <div class="ship" id="cdShip" hidden><p id="shipTxt"></p><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="shipBar"></i></div></div>
-  <div class="cd-b" id="cdBody"></div>
-  <div class="cd-f" id="cdFoot"></div>
 </aside>
-<!-- ===================== WHEEL (عجلة الحظ) — HTML ===================== -->
-<div class="wh" id="wh" hidden>
-  <div class="wh-card" id="wh-card" role="dialog" aria-modal="true" aria-labelledby="wh-title" tabindex="-1">
-    <button class="wh-x" id="wh-x" type="button" aria-label="إغلاق"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></button>
-    <h2 id="wh-title"></h2>
-    <p class="wh-sub" id="wh-sub"></p>
-    <div class="wh-stage">
-      <div class="wh-ptr" aria-hidden="true"><svg viewBox="0 0 30 40"><path d="M15 39 3.5 17A13 13 0 1 1 26.5 17z" fill="#f8fafc"/><circle cx="15" cy="11" r="4.5" fill="#6366f1"/></svg></div>
-      <canvas class="wh-cv" id="wh-cv" aria-hidden="true"></canvas>
-      <div class="wh-hub" aria-hidden="true"></div>
-    </div>
-    <div id="wh-act"><button class="wh-btn" id="wh-spin" type="button"></button></div>
-    <div class="wh-res" id="wh-res" hidden aria-live="polite">
-      <p class="wh-lbl" id="wh-lbl"></p>
-      <p class="wh-prize" id="wh-prize"></p>
-      <div class="wh-code" id="wh-codebox"><code id="wh-code"></code><button class="wh-copy" id="wh-copy" type="button"></button></div>
-      <p class="wh-terms" id="wh-terms"></p>
-      <button class="wh-btn ghost" id="wh-shop" type="button"></button>
-    </div>
-  </div>
-</div>
-
-<!-- /* MICRO-INTERACTIONS */ HTML — Quick View modal -->
-<div class="qv-ov" id="qv" hidden>
-  <div class="qv-card" id="qv-card" role="dialog" aria-modal="true" aria-labelledby="qv-title" tabindex="-1">
-    <button class="qv-x" id="qv-x" type="button" aria-label="إغلاق"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></button>
-    <div class="qv-gal">
-      <div class="qv-main" id="qv-main"></div>
-      <div class="qv-th" id="qv-th"></div>
-    </div>
-    <div class="qv-info" id="qv-info"></div>
-  </div>
-</div>
-
-<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
-<div id="fade" aria-hidden="true"></div>
-
-<script type="module" src="main.js"></script>
-
-
+<script src="shop.js"></script>
 </body>
 </html>

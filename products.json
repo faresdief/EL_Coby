@@ -1,0 +1,26 @@
+{
+  "shop": {
+    "name": "الكوبي",
+    "tagline": "إكسسوارات وجادجتات بأسعار مناسبة",
+    "whatsapp": "201282083162",
+    "currency": "ج.م",
+    "sample": true,
+    "sampleNote": "نسخة تجريبية: المنتجات والأسعار أمثلة لعرض الفكرة فقط وليست عروضًا حقيقية."
+  },
+  "categories": [
+    { "id": "audio", "name": "سماعات" },
+    { "id": "smartwatch", "name": "ساعات ذكية" },
+    { "id": "charger", "name": "شواحن" },
+    { "id": "acc", "name": "اكسسوارات" }
+  ],
+  "products": [
+    { "id": "sample-01", "name": "سماعات لاسلكية صغيرة (نموذج 1)", "category": "audio", "icon": "buds", "price": 350, "color": "#e9e6df", "desc": "سماعتان لاسلكيتان مع علبة شحن. منتج تجريبي." },
+    { "id": "sample-02", "name": "سماعة رأس بلوتوث (نموذج 2)", "category": "audio", "icon": "headphones", "price": 520, "color": "#2b2b31", "desc": "سماعة فوق الأذن. منتج تجريبي." },
+    { "id": "sample-03", "name": "ساعة ذكية بشاشة مربعة (نموذج 3)", "category": "smartwatch", "icon": "watch", "price": 700, "color": "#1d4ed8", "desc": "سوار سيليكون. منتج تجريبي." },
+    { "id": "sample-04", "name": "ساعة ذكية سوداء (نموذج 4)", "category": "smartwatch", "icon": "watch", "price": 850, "color": "#111111", "desc": "شاشة ملونة وسوار أسود. منتج تجريبي." },
+    { "id": "sample-05", "name": "شاحن حائط سريع (نموذج 5)", "category": "charger", "icon": "charger", "price": 200, "color": "#f3f3f3", "desc": "مدخل USB-C. منتج تجريبي." },
+    { "id": "sample-06", "name": "باور بانك 10000 (نموذج 6)", "category": "charger", "icon": "bank", "price": 450, "color": "#3a3f4b", "desc": "للشحن أثناء التنقل. منتج تجريبي." },
+    { "id": "sample-07", "name": "كيبل شحن مضفر (نموذج 7)", "category": "acc", "icon": "cable", "price": 90, "color": "#c9a24a", "desc": "طول متر. منتج تجريبي." },
+    { "id": "sample-08", "name": "حامل موبايل للعربية (نموذج 8)", "category": "acc", "icon": "stand", "price": 120, "color": "#8b8f99", "desc": "تثبيت بالتهوية. منتج تجريبي." }
+  ]
+}
