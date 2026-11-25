@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://faresdief.github.io/EL_Coby/sitemap.xml

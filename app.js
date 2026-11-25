@@ -38,7 +38,8 @@ const discNote=sub=>{ /* رسالة تحت خانة الكود: كود غلط أ
 };
 function applyCode(raw){const v=raw.trim().toUpperCase();if(!v){DISCCODE='';discBad=false}else if(CODES[v]){DISCCODE=v;discBad=false}else{DISCCODE='';discBad=true}}
 const totals=(ls,useDisc)=>calculateTotals(ls,useDisc?DISCCODE:'',CODES,codeExpired(DISCCODE));
-const thumb=p=>p.img?`<img src="${p.img}" alt="" onerror="this.style.opacity=0">`:`<div class="ci-ico"><svg class="i"><use href="#${p.ico}"/></svg></div>`;
+const sset=u=>/images\.unsplash\.com.*[?&]w=900/.test(u||'')?` srcset="${u.replace('w=900','w=400')} 400w,${u.replace('w=900','w=600')} 600w,${u} 900w"`:'';
+const thumb=p=>p.img?`<img src="${p.img}" alt="" loading="lazy" decoding="async" onerror="this.style.opacity=0">`:`<div class="ci-ico"><svg class="i"><use href="#${p.ico}"/></svg></div>`;
 
 function lock(){LOCK++;document.body.style.overflow='hidden'}
 function unlock(){LOCK=Math.max(0,LOCK-1);if(!LOCK)document.body.style.overflow=''}
@@ -64,7 +65,7 @@ function renderTabs(){
 }
 function renderGrid(){
   const list=P.filter(p=>!p.addon&&(cat=='all'||(cat=='fav'?WISH.has(p.id):p.c==cat)));
-  $('#grid').innerHTML=list.length?list.map(p=>`<article class="card"><div class="tile"><button class="pic" data-o="${p.id}" aria-label="${p.n[L]}"><img src="${p.img}" alt="${p.n[L]}" class="${p.fit?'ct':''}" loading="lazy" onerror="this.style.opacity=0"></button>${p.o?`<span class="badge">-${dc(p)}%</span>`:p.b?`<span class="badge new">${T('new')}</span>`:''}<button class="fav${WISH.has(p.id)?' on':''}" data-f="${p.id}" aria-label="${T('wishAdd')}" aria-pressed="${WISH.has(p.id)}"><svg class="i"><use href="#h"/></svg></button><button class="qv" data-qv="${p.id}" aria-label="${T('qvBtn')}" title="${T('qvBtn')}"><svg class="i"><use href="#eye"/></svg></button><button class="add" data-add="${p.id}">${T('add')}</button></div><h3><button class="nm" data-o="${p.id}">${p.n[L]}</button></h3><p class="price"><b>${fmt(p.p)}</b>${p.o?`<s>${fmt(p.o)}</s>`:''}</p></article>`).join(''):`<p class="none">${T('favEmpty')}</p>`;
+  $('#grid').innerHTML=list.length?list.map(p=>`<article class="card"><div class="tile"><button class="pic" data-o="${p.id}" aria-label="${p.n[L]}"><img src="${p.img}"${sset(p.img)} sizes="(max-width:640px) 50vw, (max-width:1000px) 33vw, 25vw" alt="${p.n[L]}" class="${p.fit?'ct':''}" loading="lazy" decoding="async" onerror="this.style.opacity=0"></button>${p.o?`<span class="badge">-${dc(p)}%</span>`:p.b?`<span class="badge new">${T('new')}</span>`:''}<button class="fav${WISH.has(p.id)?' on':''}" data-f="${p.id}" aria-label="${T('wishAdd')}" aria-pressed="${WISH.has(p.id)}"><svg class="i"><use href="#h"/></svg></button><button class="qv" data-qv="${p.id}" aria-label="${T('qvBtn')}" title="${T('qvBtn')}"><svg class="i"><use href="#eye"/></svg></button><button class="add" data-add="${p.id}">${T('add')}</button></div><h3><button class="nm" data-o="${p.id}">${p.n[L]}</button></h3><p class="price"><b>${fmt(p.p)}</b>${p.o?`<s>${fmt(p.o)}</s>`:''}</p></article>`).join(''):`<p class="none">${T('favEmpty')}</p>`;
 }
 function render(){
   H.lang=L?'en':'ar';H.dir=L?'ltr':'rtl';document.title=T('brand');
